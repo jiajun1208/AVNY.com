@@ -482,25 +482,25 @@
             line-height: 1.5;
         }
 
-        /* Age Gate Modal Styles */
-        #ageGateModal {
+        /* Age Gate Modal Styles (Removed) */
+        /* #ageGateModal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.95); /* Nearly black overlay */
+            background-color: rgba(0, 0, 0, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1100; /* Higher than other modals */
+            z-index: 1100;
         }
         #ageGateModalContent {
             background-color: #1A1A1A;
             padding: 3rem;
             border-radius: 1rem;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-            border: 1px solid #E53E3E; /* Red border for urgency */
+            border: 1px solid #E53E3E;
             text-align: center;
             max-width: 500px;
             width: 90%;
@@ -552,13 +552,13 @@
             color: #E53E3E;
             margin-top: 5rem;
             font-weight: 700;
-        }
+        } */
     </style>
 </head>
 <body class="flex flex-col items-center p-4 sm:p-6 lg:p-8">
 
-    <!-- Age Gate Modal -->
-    <div id="ageGateModal" class="hidden">
+    <!-- Age Gate Modal (Removed) -->
+    <!-- <div id="ageGateModal" class="hidden">
         <div id="ageGateModalContent">
             <h2 id="ageGateTitle"></h2>
             <p id="ageGateMessage"></p>
@@ -567,10 +567,10 @@
                 <button id="ageGateNoButton"></button>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <!-- Access Denied Message (hidden by default) -->
-    <div id="accessDeniedMessage" class="hidden"></div>
+    <!-- Access Denied Message (Removed) -->
+    <!-- <div id="accessDeniedMessage" class="hidden"></div> -->
 
 
     <!-- 語言切換下拉選單 - 獨立於 header 並固定定位 -->
@@ -850,7 +850,7 @@
                     <p><strong id="detailAgeLabel" class="text-red-600">年齡：</strong> <span id="detailAge"></span></p>
                     <p><strong id="detailCupSizeLabel" class="text-red-600">罩杯：</strong> <span id="detailCupSize"></span></p>
                     <p class="mt-4"><strong id="detailDescriptionLabel" class="text-red-600">簡介：</strong> <span id="detailDescription" class="block mt-1"></span></p>
-                    <p class="mt-4"><strong id="detailDetailedInfoLabel" class="text-red-600">詳細資料：</strong> <span id="detailDetailedInfo" class="block mt-1"></span></p>
+                    <p class="mt-4"><strong id="detailDetailedInfoLabel" class="text-red-600">詳細資料：：</strong> <span id="detailDetailedInfo" class="block mt-1"></span></p>
                     <p class="flex items-center"><strong id="detailLikesLabel" class="text-red-600">應援數：</strong> <span id="modalLikesCount" class="ml-2 text-lg font-semibold"></span></p>
                     <button id="detailLikeButton" class="py-3 px-6 rounded-lg bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition duration-300 shadow-md mt-3">
                         <i class="fas fa-heart mr-2"></i> <span id="supportActressText"></span>
@@ -1018,13 +1018,13 @@
         let currentActressIdForComments = null; // To store the ID of the actress whose comments are currently displayed
         let unsubscribeComments = null; // To store the unsubscribe function for the comments listener
 
-        // Age Gate elements
-        const ageGateModal = document.getElementById('ageGateModal');
-        const ageGateTitle = document.getElementById('ageGateTitle');
-        const ageGateMessage = document.getElementById('ageGateMessage');
-        const ageGateYesButton = document.getElementById('ageGateYesButton');
-        const ageGateNoButton = document.getElementById('ageGateNoButton');
-        const accessDeniedMessage = document.getElementById('accessDeniedMessage');
+        // Age Gate elements (Removed)
+        // const ageGateModal = document.getElementById('ageGateModal');
+        // const ageGateTitle = document.getElementById('ageGateTitle');
+        // const ageGateMessage = document.getElementById('ageGateMessage');
+        // const ageGateYesButton = document.getElementById('ageGateYesButton');
+        // const ageGateNoButton = document.getElementById('ageGateNoButton');
+        // const accessDeniedMessage = document.getElementById('accessDeniedMessage');
 
         // Helper to get actress name based on current language
         function getActressNameByLang(actress, lang) {
@@ -1111,11 +1111,12 @@
                 commentPlaceholder: "輸入您的留言...", // New
                 commentButton: "留言", // New
                 anonymousUser: "匿名使用者", // New
-                ageGateTitle: "年齡確認",
-                ageGateMessage: "此網站內容僅適合18歲以上使用者。您是否已滿18歲？",
-                ageGateYes: "是，我已滿18歲",
-                ageGateNo: "否，我未滿18歲",
-                accessDenied: "很抱歉，您未滿18歲，無法瀏覽本網站內容。"
+                // Age Gate translations (Removed)
+                // ageGateTitle: "年齡確認",
+                // ageGateMessage: "此網站內容僅適合18歲以上使用者。您是否已滿18歲？",
+                // ageGateYes: "是，我已滿18歲",
+                // ageGateNo: "否，我未滿18歲",
+                // accessDenied: "很抱歉，您未滿18歲，無法瀏覽本網站內容。"
             },
             'zh-CN': {
                 appName: "AVNY.com",
@@ -1194,11 +1195,12 @@
                 commentPlaceholder: "输入您的留言...",
                 commentButton: "留言",
                 anonymousUser: "匿名用户",
-                ageGateTitle: "年龄确认",
-                ageGateMessage: "此网站内容仅适合18岁以上用户。您是否已满18岁？",
-                ageGateYes: "是，我已满18岁",
-                ageGateNo: "否，我未满18岁",
-                accessDenied: "很抱歉，您未满18岁，无法浏览本网站内容。"
+                // Age Gate translations (Removed)
+                // ageGateTitle: "年龄确认",
+                // ageGateMessage: "此网站内容仅适合18岁以上用户。您是否已满18岁？",
+                // ageGateYes: "是，我已满18岁",
+                // ageGateNo: "否，我未满18岁",
+                // accessDenied: "很抱歉，您未满18岁，无法浏览本网站的内容。"
             },
             'en': {
                 appName: "AVNY.com",
@@ -1277,11 +1279,12 @@
                 commentPlaceholder: "Enter your comment...",
                 commentButton: "Comment",
                 anonymousUser: "Anonymous User",
-                ageGateTitle: "Age Verification",
-                ageGateMessage: "This website contains content suitable for adults 18 years or older. Are you 18 or older?",
-                ageGateYes: "Yes, I am 18+",
-                ageGateNo: "No, I am under 18",
-                accessDenied: "Sorry, you must be 18 or older to access this website."
+                // Age Gate translations (Removed)
+                // ageGateTitle: "Age Verification",
+                // ageGateMessage: "This website contains content suitable for adults 18 years or older. Are you 18 or older?",
+                // ageGateYes: "Yes, I am 18+",
+                // ageGateNo: "No, I am under 18",
+                // accessDenied: "Sorry, you must be 18 or older to access this website."
             },
             'ja': {
                 appName: "AVNY.com",
@@ -1360,11 +1363,12 @@
                 commentPlaceholder: "コメントを入力...",
                 commentButton: "コメント",
                 anonymousUser: "匿名ユーザー",
-                ageGateTitle: "年齢確認",
-                ageGateMessage: "このウェブサイトのコンテンツは18歳以上のユーザーのみが対象です。あなたは18歳以上ですか？",
-                ageGateYes: "はい、18歳以上です",
-                ageGateNo: "いいえ、18歳未満です",
-                accessDenied: "申し訳ありませんが、18歳未満の方はこのウェブサイトのコンテンツにアクセスできません。"
+                // Age Gate translations (Removed)
+                // ageGateTitle: "年齢確認",
+                // ageGateMessage: "このウェブサイトのコンテンツは18歳以上のユーザーのみが対象です。あなたは18歳以上ですか？",
+                // ageGateYes: "はい、18歳以上です",
+                // ageGateNo: "いいえ、18歳未満です",
+                // accessDenied: "申し訳ありませんが、18歳未満の方はこのウェブサイトのコンテンツにアクセスできません。"
             }
         };
 
@@ -1490,12 +1494,12 @@
             commentTextarea.placeholder = t.commentPlaceholder;
             submitCommentButton.textContent = t.commentButton;
 
-            // Age Gate translations
-            ageGateTitle.textContent = t.ageGateTitle;
-            ageGateMessage.textContent = t.ageGateMessage;
-            ageGateYesButton.textContent = t.ageGateYes;
-            ageGateNoButton.textContent = t.ageGateNo;
-            accessDeniedMessage.textContent = t.accessDenied;
+            // Age Gate translations (Removed)
+            // ageGateTitle.textContent = t.ageGateTitle;
+            // ageGateMessage.textContent = t.ageGateMessage;
+            // ageGateYesButton.textContent = t.ageGateYes;
+            // ageGateNoButton.textContent = t.ageGateNo;
+            // accessDeniedMessage.textContent = t.accessDenied;
 
             // Update current question text if quiz is active
             if (quizPanel.classList.contains('active-quiz') && quizQuestions.length > 0) {
@@ -1512,14 +1516,12 @@
             currentLang = lang;
             localStorage.setItem('lang', lang);
             applyTranslations();
-            // Re-render main content only if allowed (after age check)
-            if (localStorage.getItem('ageVerified') === 'true') {
-                performSearch(); // 重新渲染搜尋結果以應用新語言
-                if (adminPanelVisible) {
-                    renderAdminActressList(); // 重新渲染管理列表
-                }
-                renderHomepageSections(); // Also re-render homepage sections with new language names
+            // Re-render main content
+            performSearch(); // 重新渲染搜尋結果以應用新語言
+            if (adminPanelVisible) {
+                renderAdminActressList(); // 重新渲染管理列表
             }
+            renderHomepageSections(); // Also re-render homepage sections with new language names
             languageDropdownMenu.classList.add('hidden'); // Close dropdown after selection
         }
 
@@ -2887,20 +2889,45 @@
                 }
             }
 
-            let resultText = translations[currentLang].idealActressQuizResultDefault;
+            // Define the result texts directly here, avoiding needing the translation keys for them
+            const idealActressQuizResults = {
+                'zh-TW': {
+                    'A': "恭喜！你的理想女優是擁有陽光笑容與活力的 **新有菜**！",
+                    'B': "恭喜！你的理想女優是溫柔婉約、氣質出眾的 **三上悠亞**！",
+                    'C': "恭喜！你的理想女優是性感火辣、充滿成熟魅力的 **波多野結衣**！",
+                    'tie': "你的選擇呈現多樣性！無法明確判斷你的理想類型，但你對AV女優的愛是廣闊的！"
+                },
+                'zh-CN': {
+                    'A': "恭喜！你的理想女优是拥有阳光笑容与活力的 **新有菜**！",
+                    'B': "恭喜！你的理想女优是温柔婉约、气质出众的 **三上悠亚**！",
+                    'C': "恭喜！你的理想女优是性感火辣、充满成熟魅力的 **波多野结衣**！",
+                    'tie': "你的选择呈现多样性！无法明确判断你的理想类型，但你对AV女优的爱是广阔的！"
+                },
+                'en': {
+                    'A': "Congratulations! Your ideal actress is the energetic and sunny **Arina Arina**!",
+                    'B': "Congratulations! Your ideal actress is the gentle and elegant **Yua Mikami**!",
+                    'C': "Congratulations! Your ideal actress is the sexy and mature **Yui Hatano**!",
+                    'tie': "Your choices show diversity! It's hard to pinpoint one ideal type, but your love for AV actresses is vast!"
+                },
+                'ja': {
+                    'A': "おめでとうございます！あなたの理想の女優は、明るい笑顔と活気に満ちた**新有菜**です！",
+                    'B': "おめでとうございます！あなたの理想の女優は、優雅で上品な**三上悠亜**です！",
+                    'C': "おめでとうございます！あなたの理想の女優は、セクシーで成熟した魅力を持つ**波多野結衣**です！",
+                    'tie': "あなたの選択は多様性を示しています！理想のタイプを特定することはできませんが、AV女優への愛は広大です！"
+                }
+            };
+
+
+            let resultText = '';
             let actressNameForVideo = ''; // To store the actress name for video lookup
 
-            if (!isTie) { // Only provide specific result if there's no tie
-                if (idealType === 'A') {
-                    resultText = translations[currentLang].idealActressQuizResult1; // Energetic/Sunny (新有菜)
-                    actressNameForVideo = '新有菜';
-                } else if (idealType === 'B') {
-                    resultText = translations[currentLang].idealActressQuizResult2; // Gentle/Elegant (三上悠亞)
-                    actressNameForVideo = '三上悠亞';
-                } else if (idealType === 'C') {
-                    resultText = translations[currentLang].idealActressQuizResult3; // Sexy/Mature (波多野結衣)
-                    actressNameForVideo = '波多野結衣';
-                }
+            if (isTie) {
+                resultText = idealActressQuizResults[currentLang]['tie'];
+            } else {
+                resultText = idealActressQuizResults[currentLang][idealType];
+                if (idealType === 'A') actressNameForVideo = '新有菜';
+                else if (idealType === 'B') actressNameForVideo = '三上悠亞';
+                else if (idealType === 'C') actressNameForVideo = '波多野結衣';
             }
             
             idealActressQuizResultText.innerHTML = resultText; // Use innerHTML for bold text
@@ -2977,7 +3004,7 @@
             idealActressResultVideoPlayer.src = ''; // Clear video source
         });
 
-        // Function to hide all main content areas
+        // Function to hide all main content areas (not needed with age gate removed, but keep for other hide logic)
         function hideAllContent() {
             homepageSections.classList.add('hidden');
             mainApp.classList.add('hidden');
@@ -2986,7 +3013,7 @@
             idealActressQuizPanel.classList.add('hidden');
         }
 
-        // Function to show main app content
+        // Function to show main app content (now always called on init)
         function showMainAppContent() {
             homepageSections.classList.remove('hidden');
             mainApp.classList.remove('hidden');
@@ -2995,36 +3022,6 @@
             quizPanel.classList.add('hidden');
             idealActressQuizPanel.classList.add('hidden');
         }
-
-        // Age verification logic
-        function checkAgeVerification() {
-            const ageVerified = localStorage.getItem('ageVerified');
-            if (ageVerified === 'true') {
-                showMainAppContent();
-                initializeAppContent(); // Proceed with app initialization
-            } else {
-                hideAllContent();
-                ageGateModal.classList.remove('hidden');
-                applyTranslations(); // Apply translations to age gate as well
-            }
-        }
-
-        ageGateYesButton.addEventListener('click', () => {
-            localStorage.setItem('ageVerified', 'true');
-            ageGateModal.classList.add('hidden'); // Close the modal
-            accessDeniedMessage.classList.add('hidden'); // Ensure denial message is hidden
-            showMainAppContent();
-            initializeAppContent(); // Proceed with app initialization
-        });
-
-        ageGateNoButton.addEventListener('click', () => {
-            localStorage.setItem('ageVerified', 'false');
-            ageGateModal.classList.add('hidden'); // Close the modal
-            hideAllContent(); // Ensure all content is hidden
-            accessDeniedMessage.classList.remove('hidden');
-            // Optionally, disable language switcher if access is denied
-            languageDropdownButton.disabled = true;
-        });
 
         // Encapsulate the original DOMContentLoaded logic into a function
         function initializeAppContent() {
@@ -3077,10 +3074,11 @@
             applyTranslations();
             updateMediaPreview(''); // Initialize media preview with empty state
             updateVideoLinkPreview(''); // Initialize video link preview with empty state
+            showMainAppContent(); // Ensure main content is visible on initialization
         }
 
-        // Initial check for age verification when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', checkAgeVerification);
+        // Directly call initializeAppContent on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', initializeAppContent);
     </script>
 </body>
 </html>
