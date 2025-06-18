@@ -887,7 +887,7 @@
         import { getFirestore, collection, addDoc, getDocs, doc, onSnapshot, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase 初始化變數
-        const appId = firebaseConfig.AVNY.com;
+        const appId = initializeApp(firebaseConfig);
         const firebaseConfig = {
             apiKey: "AIzaSyCZSC4KP9r9Ia74gjhVM4hkhkCiXU6ltR4", // 替換為您的 API Key
             authDomain: "avny-ccbe9.firebaseapp.com", // 替換為您的 Auth Domain
