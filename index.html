@@ -1,0 +1,3086 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="appTitle">AVNY.com</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Importer Google Fonts for Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* 純黑背景，保持簡潔 */
+            color: #FFFFFF; /* 白色文字 */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 確保內容居中 */
+            padding: 1.5rem; /* 增加整體頁面內邊距 */
+        }
+
+        /* 主色調：更內斂的紅色和灰色系列 */
+        .text-red-600 {
+            color: #E53E3E; /* 略微柔和的紅色，更具設計感 */
+        }
+        .bg-gray-800 {
+            background-color: #1A1A1A; /* 區塊背景：深灰，與純黑背景形成層次感 */
+        }
+        /* 更改邊框顏色為更柔和的灰色 */
+        .border-gray-700 {
+            border-color: #4A5568; /* 柔和的深藍灰，取代紅色邊框 */
+        }
+        .placeholder-text {
+            color: #A0A0A0; /* 佔位符文字顏色 */
+        }
+        .text-gray-400 { /* 調整淺灰文字顏色，確保可讀性 */
+            color: #CBD5E0;
+        }
+
+        /* 滾動條隱藏 */
+        .scroll-container {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        /* 訊息提示框 */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #48BB78; /* 成功訊息綠 */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 0.5rem; /* 圓角適中 */
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* 更柔和的陰影 */
+            font-weight: 600; /* Semi-bold */
+        }
+        .message-box.error {
+            background-color: #F56565; /* 錯誤訊息紅 */
+        }
+
+        /* 自訂確認對話框 */
+        .confirm-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* 更深的半透明背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        .confirm-modal-content {
+            background-color: #1A1A1A;
+            padding: 2.5rem; /* 增加內邊距 */
+            border-radius: 0.75rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); /* 顯著但柔和的陰影 */
+            border: 1px solid #4A5568; /* 更改邊框顏色為柔和的深藍灰 */
+            text-align: center;
+            max-width: 450px; /* 稍微寬一點 */
+            width: 90%;
+        }
+        .confirm-modal-content h3 {
+            font-size: 1.875rem; /* 更大的標題 */
+            font-weight: 700; /* Bold */
+            color: #FFFFFF;
+            margin-bottom: 2rem; /* 增加間距 */
+        }
+        .confirm-modal-content .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem; /* 增加按鈕間距 */
+        }
+        .confirm-modal-content button {
+            padding: 0.875rem 2rem; /* 增大按鈕尺寸 */
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out; /* 更快的過渡效果 */
+            letter-spacing: 0.025em; /* 稍微增加字間距 */
+        }
+        .confirm-modal-content .confirm-button {
+            background-color: #E53E3E;
+            color: white;
+        }
+        .confirm-modal-content .confirm-button:hover {
+            background-color: #C53030; /* 更深的紅色 */
+            transform: translateY(-2px); /* 輕微上浮效果 */
+        }
+        .confirm-modal-content .cancel-button {
+            background-color: #4A5568; /* 深藍灰 */
+            color: white;
+        }
+        .confirm-modal-content .cancel-button:hover {
+            background-color: #2D3748; /* 更深的藍灰 */
+            transform: translateY(-2px);
+        }
+
+        /* 語言切換下拉選單 - 固定在右上角 */
+        .language-dropdown-container {
+            position: fixed; /* 固定定位 */
+            top: 1.5rem; /* 距離頂部 */
+            right: 1.5rem; /* 距離右側 */
+            z-index: 1050; /* 確保在最上層 */
+        }
+        .language-dropdown-menu {
+            position: absolute;
+            right: 0; /* 對齊到其固定定位的父元素右側 */
+            top: calc(100% + 10px); /* 距離按鈕下方 */
+            left: auto; /* 取消左側定位，交給 right */
+            background-color: #1A1A1A;
+            min-width: 140px;
+            box-shadow: 0px 8px 24px 0px rgba(0,0,0,0.6);
+            z-index: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #4A5568; /* 更改邊框顏色為柔和的深藍灰 */
+        }
+        .language-dropdown-menu button {
+            color: white;
+            padding: 12px 18px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .language-dropdown-menu button:hover {
+            background-color: #2D3748;
+            transform: translateX(2px);
+        }
+        .language-dropdown-menu button.active {
+            background-color: #E53E3E;
+            font-weight: 700;
+        }
+
+        /* 後台媒體預覽 */
+        #actressMediaPreviewContainer {
+            margin-top: 15px;
+            border: 1px solid #4A5568; /* 更改邊框顏色為柔和的深藍灰 */
+            background-color: #2D3748;
+            border-radius: 0.5rem;
+        }
+        #actressMediaPreviewContainer video,
+        #actressMediaPreviewContainer iframe {
+            width: 140px;
+            height: 105px;
+            border-radius: 0.375rem;
+            border: none;
+            background-color: #000;
+        }
+        #noMediaPreviewText, #videoLinkPreviewText {
+            color: #A0A0A0;
+            font-size: 0.95rem;
+            margin-top: 5px;
+            padding: 10px;
+        }
+
+        /* 廣告區塊 */
+        .ad-section {
+            width: 100%;
+            max-width: 768px;
+            min-height: 100px;
+            background-color: #1A1A1A;
+            border: 1px solid #4A5568; /* 更改邊框顏色為柔和的深藍灰 */
+            color: #A0A0A0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            margin: 2.5rem auto;
+            border-radius: 0.75rem;
+            transition: border-color 0.3s ease;
+        }
+        .ad-section:hover {
+            border-color: #E53E3E;
+        }
+        .ad-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem; /* 保持圖片圓角 */
+        }
+
+        /* Aspect ratio container for 3:4 video */
+        .aspect-ratio-3-4 {
+            position: relative;
+            width: 100%;
+            padding-bottom: calc(4 / 3 * 100%); /* Height / Width * 100% = 4/3 * 100% */
+            overflow: hidden; /* Ensure content respects the border-radius of the parent */
+            border-radius: 0.5rem; /* Match card border-radius */
+            margin-bottom: 1rem; /* Match existing margin */
+        }
+        .aspect-ratio-3-4 iframe,
+        .aspect-ratio-3-4 video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem; /* Ensure video itself is rounded */
+            border: 1px solid #2D3748; /* Match original video border */
+        }
+
+        /* 女優卡片本身 */
+        .actress-card {
+            background-color: #1A1A1A;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            box-shadow: none;
+            border: 1px solid #2D3748; /* 更改邊框顏色為柔和的深藍灰 */
+            transition: all 0.2s ease-in-out;
+            overflow: hidden; /* 確保內容不會溢出圓角邊框 */
+        }
+        /* 女優卡片hover效果 */
+        .actress-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border-color: #E53E3E;
+            background-color: #2D3748; /* 將背景顏色改為略深的灰色，與hover效果一致 */
+        }
+        .actress-card h3 {
+            font-weight: 600;
+        }
+
+        /* 詳細資訊彈出視窗媒體 */
+        /* Updated for better responsive layout */
+        #detailMediaContainer {
+            margin-bottom: 1.5rem; /* Add some space below the video */
+        }
+        #detailMediaContainer .aspect-ratio-3-4 {
+            /* The aspect ratio container will take 100% of its parent's width */
+            width: 100%; 
+            margin: 0 auto; /* Center it if its parent is smaller than 100% */
+        }
+        #detailMediaContainer iframe,
+        #detailMediaContainer video {
+            border-radius: 0.75rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #4A5568; /* 更改邊框顏色為柔和的深藍灰 */
+        }
+
+        /* Quiz specific styles - inherit minimalist aesthetic */
+        .quiz-panel { /* Use a generic class for both quiz panels */
+            position: relative; /* For absolute positioning of back button */
+            background-color: #1A1A1A;
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid #4A5568; /* 更改邊框顏色為柔和的深藍灰 */
+            max-width: 650px;
+            width: 90%;
+            margin-top: 2.5rem;
+            text-align: center;
+        }
+        .quiz-panel h2 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: #E53E3E;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+        .quiz-panel .quiz-question {
+            font-size: 1.625rem;
+            margin-bottom: 2rem;
+            color: #FFFFFF;
+            line-height: 1.4;
+        }
+        .quiz-panel .quiz-input {
+            background-color: #000000;
+            border: 1px solid #4A5568;
+            color: #FFFFFF;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .quiz-panel .quiz-input:focus {
+            outline: none;
+            border-color: #E53E3E;
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.4);
+        }
+        .quiz-panel .quiz-input::placeholder {
+            color: #A0A0A0;
+        }
+        .quiz-panel .quiz-buttons button {
+            padding: 0.875rem 2.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            letter-spacing: 0.025em;
+        }
+        .quiz-panel .next-btn {
+            background-color: #4299E1;
+        }
+        .quiz-panel .next-btn:hover {
+            background-color: #3182CE;
+            transform: translateY(-2px);
+        }
+        .quiz-panel .submit-btn {
+            background-color: #48BB78;
+        }
+        .quiz-panel .submit-btn:hover {
+            background-color: #38A169;
+            transform: translateY(-2px);
+        }
+        .quiz-panel .quiz-result {
+            margin-top: 2.5rem;
+            font-size: 1.375rem;
+            color: #FFFFFF;
+            line-height: 1.5;
+        }
+        .quiz-panel .special-video-container {
+            margin-top: 2.5rem;
+            background-color: #000;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            width: 100%; /* Ensure it takes full width of parent */
+            max-width: 560px; /* Standard YouTube embed width */
+            margin-left: auto; /* Center the video */
+            margin-right: auto;
+        }
+        .quiz-panel .special-video-container iframe {
+            width: 100%; /* Make iframe responsive within its container */
+            height: 315px; /* Standard 16:9 aspect ratio height for 560px width, adjust as needed */
+            border: 1px solid #4A5568; /* 更改邊框顏色為柔和的深藍灰 */
+            border-radius: 0.75rem;
+        }
+        .quiz-panel .quiz-result button {
+            background-color: #E53E3E;
+            color: white;
+            margin-top: 1.5rem;
+            padding: 0.875rem 2.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            letter-spacing: 0.025em;
+        }
+        .quiz-panel .quiz-result button:hover {
+            background-color: #C53030;
+            transform: translateY(-2px);
+        }
+        /* Style for Ideal Actress Quiz Options */
+        .ideal-quiz-option-button {
+            width: 100%;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            background-color: #2D3748;
+            color: white;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            text-align: left;
+            border: 1px solid #4A5568;
+        }
+        .ideal-quiz-option-button:hover {
+            background-color: #E53E3E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+
+        /* Header buttons common style */
+        .header-button {
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            background-color: #2D3748;
+            color: white;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .header-button:hover {
+            background-color: #E53E3E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* 調整老司機問答按鈕的具體樣式 */
+        #quizButtonsContainer .header-button {
+            padding: 0.875rem 1.75rem; /* 增加 padding */
+            font-size: 1.125rem; /* 增大字體 */
+            /* 繼承 .header-button 的樣式 */
+        }
+
+        /* Comments Section Styles */
+        .comment-section {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #2D3748; /* Subtle separator */
+        }
+        .comment-section h3 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #E53E3E;
+            margin-bottom: 1.5rem;
+        }
+        .comment-input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .comment-input-area textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #000000;
+            border: 1px solid #4A5568;
+            color: #FFFFFF;
+            font-size: 1rem;
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 80px;
+        }
+        .comment-input-area button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #4CAF50; /* Green submit button */
+            color: white;
+            font-weight: 600;
+            align-self: flex-end; /* Align to the right */
+            transition: background-color 0.2s ease;
+        }
+        .comment-input-area button:hover {
+            background-color: #388E3C;
+        }
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .comment-item {
+            background-color: #1F2937; /* Slightly lighter background for comments */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #374151; /* Darker border for comments */
+        }
+        .comment-item .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: #9CA3AF; /* Lighter grey for meta info */
+            margin-bottom: 0.5rem;
+        }
+        .comment-item .comment-text {
+            color: #FFFFFF;
+            line-height: 1.5;
+        }
+
+        /* Age Gate Modal Styles */
+        #ageGateModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); /* Nearly black overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100; /* Higher than other modals */
+        }
+        #ageGateModalContent {
+            background-color: #1A1A1A;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid #E53E3E; /* Red border for urgency */
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        #ageGateModalContent h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #E53E3E;
+            margin-bottom: 1.5rem;
+        }
+        #ageGateModalContent p {
+            font-size: 1.3rem;
+            color: #FFFFFF;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        #ageGateModalContent .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        #ageGateModalContent button {
+            padding: 1rem 2.5rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            transition: all 0.2s ease-in-out;
+            letter-spacing: 0.05em;
+            font-size: 1.2rem;
+        }
+        #ageGateYesButton {
+            background-color: #E53E3E;
+            color: white;
+        }
+        #ageGateYesButton:hover {
+            background-color: #C53030;
+            transform: translateY(-3px);
+        }
+        #ageGateNoButton {
+            background-color: #4A5568;
+            color: white;
+        }
+        #ageGateNoButton:hover {
+            background-color: #2D3748;
+            transform: translateY(-3px);
+        }
+        #accessDeniedMessage {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #E53E3E;
+            margin-top: 5rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center p-4 sm:p-6 lg:p-8">
+
+    <!-- Age Gate Modal -->
+    <div id="ageGateModal" class="hidden">
+        <div id="ageGateModalContent">
+            <h2 id="ageGateTitle"></h2>
+            <p id="ageGateMessage"></p>
+            <div class="button-group">
+                <button id="ageGateYesButton"></button>
+                <button id="ageGateNoButton"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Denied Message (hidden by default) -->
+    <div id="accessDeniedMessage" class="hidden"></div>
+
+
+    <!-- 語言切換下拉選單 - 獨立於 header 並固定定位 -->
+    <div class="language-dropdown-container">
+        <button id="languageDropdownButton" class="header-button">
+            ZH-TW
+        </button>
+        <div id="languageDropdownMenu" class="language-dropdown-menu hidden">
+            <!-- Language options will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Message Box for notifications -->
+    <div id="messageBox" class="message-box"></div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmDialog" class="confirm-modal-overlay hidden">
+        <div class="confirm-modal-content">
+            <h3 id="confirmMessage"></h3>
+            <div class="button-group">
+                <button id="confirmYes" class="confirm-button">是</button>
+                <button id="confirmNo" class="cancel-button">否</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 網站標題 -->
+    <header class="w-full max-w-4xl text-center mb-8">
+        <h1 id="appName" class="text-5xl sm:text-6xl font-extrabold text-red-600 tracking-wider mb-2">AVNY.com</h1>
+        <p id="appSubtitle" class="text-white text-lg sm:text-xl font-light">全球AV女優資訊搜尋平台</p>
+        <div id="quizButtonsContainer" class="flex flex-wrap justify-center mt-4 space-x-2 space-y-2 sm:space-y-0">
+            <button id="toggleAdminButton" class="header-button">添加女優</button>
+            <button id="showQuizButton" class="header-button"></button>
+            <button id="showIdealActressQuizButton" class="header-button"></button>
+            <!-- 語言切換按鈕已移至獨立的固定定位容器 -->
+        </div>
+    </header>
+
+    <!-- 今日最辣 & 最新上線 區塊 -->
+    <section id="homepageSections" class="w-full max-w-4xl mb-10">
+        <!-- 今日最辣 -->
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8"> <!-- 更改邊框顏色 -->
+            <h2 id="hottestTitle" class="text-3xl font-bold text-red-600 mb-5 text-center">今日最辣</h2>
+            <div id="hottestActresses" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Hottest actresses will be rendered here -->
+            </div>
+        </div>
+
+        <!-- 最新上線 -->
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8"> <!-- 更改邊框顏色 -->
+            <h2 id="newlyAddedTitle" class="text-3xl font-bold text-red-600 mb-5 text-center">最新上線</h2>
+            <div id="newlyAddedActresses" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Newly added actresses will be rendered here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 主網站介面 (原有搜尋與結果區塊) -->
+    <div id="mainApp" class="w-full flex flex-col items-center">
+        <!-- 搜尋與篩選區塊 -->
+        <main class="w-full max-w-4xl bg-gray-800 p-7 rounded-xl border border-gray-700 mb-10"> <!-- 更改邊框顏色 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-7">
+                <!-- 女優名字搜尋 -->
+                <div>
+                    <label for="nameSearch" id="nameSearchLabel" class="block text-white text-base font-medium mb-2">女優名字</label>
+                    <input type="text" id="nameSearch" placeholder="輸入女優名字"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600 transition duration-300">
+                </div>
+
+                <!-- 國籍篩選 -->
+                <div>
+                    <label for="nationalityFilter" id="nationalityFilterLabel" class="block text-white text-base font-medium mb-2">國籍</label>
+                    <select id="nationalityFilter"
+                            class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white focus:outline-none focus:border-red-600 transition duration-300">
+                        <option value="" id="allNationalitiesOption">所有國籍</option>
+                        <option value="日本" id="japanNationalityOption">日本</option>
+                        <!-- 可在此處添加更多國籍選項 -->
+                    </select>
+                </div>
+
+                <!-- 年齡篩選 (每十年為一個單位) -->
+                <div>
+                    <label for="ageFilter" id="ageFilterLabel" class="block text-white text-base font-medium mb-2">年齡區間</label>
+                    <select id="ageFilter"
+                            class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white focus:outline-none focus:border-red-600 transition duration-300">
+                        <option value="" id="allAgesOption">所有年齡</option>
+                        <option value="18-29">18-29歲</option>
+                        <option value="30-39">30-39歲</option>
+                        <option value="40-49">40-49歲</option>
+                        <!-- 可在此處添加更多年齡區間 -->
+                    </select>
+                </div>
+
+                <!-- 罩杯篩選 -->
+                <div>
+                    <label for="cupSizeFilter" id="cupSizeFilterLabel" class="block text-white text-base font-medium mb-2">罩杯</label>
+                    <select id="cupSizeFilter"
+                            class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white focus:outline-none focus:border-red-600 transition duration-300">
+                        <option value="" id="allCupSizesOption">所有罩杯</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>
+                        <option value="M">M">M</option>
+                        <option value="N">N</option>
+                        <option value="O">O</option>
+                        <option value="P">P</option>
+                        <!-- 可在此處添加更多罩杯選項 -->
+                    </select>
+                </div>
+            </div>
+            <button id="searchButton"
+                    class="w-full py-4 px-7 rounded-lg bg-red-600 text-white font-bold text-xl hover:bg-red-700 transition duration-300 shadow-lg">
+                搜尋女優
+            </button>
+        </main>
+
+        <!-- 搜尋結果展示區 -->
+        <section id="resultsSection" class="w-full max-w-4xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mb-10"></section>
+
+        <!-- 廣告欄位 1 -->
+        <div id="adSection1" class="ad-section">
+            <!-- 廣告圖片將在此處顯示 -->
+        </div>
+        <!-- 廣告欄位 2 (示範 Google 雲端硬碟圖片) -->
+        <div id="adSection2" class="ad-section">
+            <!-- Google Drive 廣告圖片將在此處顯示 -->
+        </div>
+        <!-- 廣告欄位 3 -->
+        <div class="ad-section">
+            <p>您的廣告將顯示在此處 (3)</p>
+        </div>
+    </div>
+
+    <!-- 後台管理介面 -->
+    <div id="adminPanel" class="w-full flex-col items-center hidden">
+        <main class="w-full max-w-4xl bg-gray-800 p-7 rounded-xl border border-gray-700 mb-10"> <!-- 更改邊框顏色 -->
+            <h2 id="addActressHeader" class="text-3xl font-bold text-red-600 mb-6 text-center">新增女優</h2>
+            <form id="actressForm" class="grid grid-cols-1 gap-5">
+                <!-- Multi-language Name Inputs -->
+                <div>
+                    <label for="actressNameZhTw" class="block text-white text-base font-medium mb-2">女優姓名 (繁體中文)</label>
+                    <input type="text" id="actressNameZhTw" required
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label for="actressNameZhCn" class="block text-white text-base font-medium mb-2">女優姓名 (簡體中文)</label>
+                    <input type="text" id="actressNameZhCn"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label for="actressNameEn" class="block text-white text-base font-medium mb-2">女優姓名 (英文)</label>
+                    <input type="text" id="actressNameEn"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label for="actressNameJa" class="block text-white text-base font-medium mb-2">女優姓名 (日文)</label>
+                    <input type="text" id="actressNameJa"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+
+                <div>
+                    <label for="actressNationality" id="nationalityLabelAdmin" class="block text-white text-base font-medium mb-2">國籍</label>
+                    <input type="text" id="actressNationality" value="日本" required
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label for="actressBirthDate" id="birthDateLabel" class="block text-white text-base font-medium mb-2">出生日期 (YYYY-MM-DD)</label>
+                    <input type="date" id="actressBirthDate" required
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label for="actressCupSize" id="cupSizeLabelAdmin" class="block text-white text-base font-medium mb-2">罩杯</label>
+                    <input type="text" id="actressCupSize" required placeholder="例如: E"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label for="actressMediaUrl" id="mediaUrlLabel" class="block text-white text-base font-medium mb-2">影片URL (限YouTube)</label>
+                    <input type="url" id="actressMediaUrl"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                    <!-- Removed file upload elements -->
+                    <div id="actressMediaPreviewContainer">
+                        <!-- Media preview will be dynamically inserted here -->
+                        <p id="noMediaPreviewText" class="text-gray-400">貼上YouTube影片URL後將在此顯示預覽</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="actressRecommendedVideoUrl" id="recommendedVideoUrlLabel" class="block text-white text-base font-medium mb-2">推薦影片URL</label>
+                    <input type="url" id="actressRecommendedVideoUrl"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                    <div id="videoLinkPreviewContainer">
+                        <p id="videoLinkPreviewText" class="text-gray-400">貼上影片URL後將在此顯示連結提示</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="actressWikipediaLink" id="wikipediaLinkLabelAdmin" class="block text-white text-base font-medium mb-2">維基百科連結</label>
+                    <input type="url" id="actressWikipediaLink"
+                           class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
+                </div>
+                <button type="submit" id="addEditActressButton"
+                        class="w-full py-4 px-7 rounded-lg bg-red-600 text-white font-bold text-xl hover:bg-red-700 transition duration-300 shadow-lg">
+                    新增
+                </button>
+                <button type="button" id="cancelEditButton" class="w-full py-4 px-7 rounded-lg bg-gray-600 text-white font-bold text-xl hover:bg-gray-700 transition duration-300 shadow-lg hidden">
+                    取消編輯
+                </button>
+            </form>
+        </main>
+
+        <section class="w-full max-w-4xl bg-gray-800 p-7 rounded-xl border border-gray-700"> <!-- 更改邊框顏色 -->
+            <h2 id="manageActressesHeader" class="text-3xl font-bold text-red-600 mb-6 text-center">管理女優資料</h2>
+            <div id="adminActressList" class="space-y-5">
+                <!-- 女優列表將由JavaScript渲染 -->
+            </div>
+        </section>
+    </div>
+
+    <!-- 測驗遊戲介面 -->
+    <div id="quizPanel" class="quiz-panel hidden">
+        <button id="backToMainFromQuiz" class="absolute top-6 left-6 header-button">返回主頁</button>
+        <h2 id="quizTitle"></h2>
+        <p id="quizQuestion" class="quiz-question"></p>
+        <input type="text" id="quizInput" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600 quiz-input" placeholder="">
+        <div id="quizButtons" class="mt-5 flex justify-center space-x-5 quiz-buttons">
+            <button id="nextQuestionButton" class="py-3.5 px-7 rounded-lg bg-blue-600 text-white font-bold text-lg hover:bg-blue-700 transition duration-300 shadow-md next-btn"></button>
+            <button id="submitQuizButton" class="py-3.5 px-7 rounded-lg bg-green-600 text-white font-bold text-lg hover:bg-green-700 transition duration-300 shadow-md submit-btn hidden"></button>
+        </div>
+        <div id="quizResult" class="hidden quiz-result">
+            <p id="quizScoreText"></p>
+            <p id="quizResultMessage" class="mt-5"></p>
+            <button id="viewSpecialVideoButton" class="py-3.5 px-7 rounded-lg bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition duration-300 shadow-md hidden"></button>
+            <button id="tryAgainButton" class="py-3.5 px-7 rounded-lg bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition duration-300 shadow-md hidden"></button>
+            <div id="specialVideoContainer" class="hidden special-video-container">
+                <iframe id="specialVideoPlayer" frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- 理想女優測驗遊戲介面 -->
+    <div id="idealActressQuizPanel" class="quiz-panel hidden">
+        <button id="backToMainFromIdealQuiz" class="absolute top-6 left-6 header-button">返回主頁</button>
+        <h2 id="idealActressQuizTitle"></h2>
+        <p id="idealActressQuizQuestion" class="quiz-question"></p>
+        <div id="idealActressQuizOptions" class="flex flex-col space-y-4 mt-5">
+            <!-- Options will be rendered here -->
+        </div>
+        <div id="idealActressQuizResult" class="hidden quiz-result">
+            <p id="idealActressQuizResultText"></p>
+            <div id="idealActressResultVideoContainer" class="hidden special-video-container mt-4">
+                <iframe id="idealActressResultVideoPlayer" frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <button id="idealActressTryAgainButton" class="py-3.5 px-7 rounded-lg bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition duration-300 shadow-md mt-5"></button>
+        </div>
+    </div>
+
+
+    <!-- 女優詳細資訊彈出視窗 (Modal) -->
+    <div id="actressDetailModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto scroll-container relative"> <!-- 更改邊框顏色 -->
+            <button id="closeModalButton" class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-red-600 transition duration-300">&times;</button>
+            <h2 id="detailName" class="text-4xl font-bold text-red-600 mb-5 text-center"></h2>
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-7">
+                <!-- Media will be dynamically inserted here -->
+                <div id="detailMediaContainer" class="w-full md:w-1/2 lg:w-1/3 flex-shrink-0">
+                    <!-- Dynamic video or iframe here. The aspect-ratio-3-4 class will be applied by JS for width/height -->
+                </div>
+                <div class="text-white text-base flex-grow space-y-3 w-full md:w-1/2 lg:w-2/3">
+                    <p><strong id="detailNationalityLabel" class="text-red-600">國籍：</strong> <span id="detailNationality"></span></p>
+                    <p><strong id="detailAgeLabel" class="text-red-600">年齡：</strong> <span id="detailAge"></span></p>
+                    <p><strong id="detailCupSizeLabel" class="text-red-600">罩杯：</strong> <span id="detailCupSize"></span></p>
+                    <p class="mt-4"><strong id="detailDescriptionLabel" class="text-red-600">簡介：</strong> <span id="detailDescription" class="block mt-1"></span></p>
+                    <p class="mt-4"><strong id="detailDetailedInfoLabel" class="text-red-600">詳細資料：</strong> <span id="detailDetailedInfo" class="block mt-1"></span></p>
+                    <p class="flex items-center"><strong id="detailLikesLabel" class="text-red-600">應援數：</strong> <span id="modalLikesCount" class="ml-2 text-lg font-semibold"></span></p>
+                    <button id="detailLikeButton" class="py-3 px-6 rounded-lg bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition duration-300 shadow-md mt-3">
+                        <i class="fas fa-heart mr-2"></i> <span id="supportActressText"></span>
+                    </button>
+                    <p class="mt-5" id="detailRecommendedVideoContainer">
+                        <strong id="detailRecommendedVideoLabel" class="text-red-600">推薦影片：</strong>
+                        <a id="detailRecommendedVideoLink" href="#" target="_blank" class="text-red-500 hover:underline block mt-2">點此觀看影片</a>
+                        <!-- 影片縮圖將不再顯示 -->
+                    </p>
+                    <p id="detailWikipediaLink" class="text-sm mt-3">
+                        <strong class="text-red-600">維基百科：</strong> <a href="#" target="_blank" class="text-red-500 hover:underline">點此查看更多</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 網友留言區 -->
+            <div id="commentsSection" class="comment-section">
+                <h3 id="commentsTitle">網友留言區</h3>
+                <div class="comment-input-area">
+                    <textarea id="commentTextarea" placeholder="輸入您的留言..."></textarea>
+                    <button id="submitCommentButton">留言</button>
+                </div>
+                <div id="commentList" class="comment-list">
+                    <!-- Comments will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase 模組引入
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, onSnapshot, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase 初始化變數
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' && __firebase_config ? __firebase_config : '{}');
+
+        let app;
+        let db;
+        let auth;
+        let actressesCollection;
+        let currentUserId = null;
+        let isAuthReady = false;
+
+        // 頁面元素獲取
+        const homepageSections = document.getElementById('homepageSections'); // New for hiding sections
+        const mainApp = document.getElementById('mainApp');
+        const adminPanel = document.getElementById('adminPanel');
+        const quizPanel = document.getElementById('quizPanel'); // New quiz panel
+        const idealActressQuizPanel = document.getElementById('idealActressQuizPanel'); // New ideal actress quiz panel
+
+        const toggleAdminButton = document.getElementById('toggleAdminButton');
+        const showQuizButton = document.getElementById('showQuizButton'); // Old quiz button
+        const showIdealActressQuizButton = document.getElementById('showIdealActressQuizButton'); // New quiz button
+
+        const backToMainFromQuizButton = document.getElementById('backToMainFromQuiz'); // Old quiz back button
+        const backToMainFromIdealQuizButton = document.getElementById('backToMainFromIdealQuiz'); // New quiz back button
+
+        let adminPanelVisible = false;
+
+        const nameSearchInput = document.getElementById('nameSearch');
+        const nationalityFilter = document.getElementById('nationalityFilter');
+        const ageFilter = document.getElementById('ageFilter');
+        const cupSizeFilter = document.getElementById('cupSizeFilter');
+        const searchButton = document.getElementById('searchButton');
+        const resultsSection = document.getElementById('resultsSection');
+        const actressDetailModal = document.getElementById('actressDetailModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const detailName = document.getElementById('detailName');
+        const detailMediaContainer = document.getElementById('detailMediaContainer');
+        const detailNationality = document.getElementById('detailNationality');
+        const detailAge = document.getElementById('detailAge');
+        const detailCupSize = document.getElementById('detailCupSize');
+        const detailDescription = document.getElementById('detailDescription');
+        const detailDetailedInfo = document.getElementById('detailDetailedInfo');
+        const detailWikipediaLink = document.getElementById('detailWikipediaLink').querySelector('a');
+        const detailRecommendedVideoContainer = document.getElementById('detailRecommendedVideoContainer');
+        const detailRecommendedVideoLink = document.getElementById('detailRecommendedVideoLink');
+
+        // New elements for likes in modal
+        const modalLikesCount = document.getElementById('modalLikesCount');
+        const detailLikeButton = document.getElementById('detailLikeButton');
+        const supportActressText = document.getElementById('supportActressText');
+
+        // Quiz elements (Old)
+        const quizTitle = document.getElementById('quizTitle');
+        const quizQuestionElement = document.getElementById('quizQuestion');
+        const quizInput = document.getElementById('quizInput');
+        const nextQuestionButton = document.getElementById('nextQuestionButton');
+        const submitQuizButton = document.getElementById('submitQuizButton');
+        const quizResultSection = document.getElementById('quizResult');
+        const quizScoreText = document.getElementById('quizScoreText');
+        const quizResultMessage = document.getElementById('quizResultMessage');
+        const viewSpecialVideoButton = document.getElementById('viewSpecialVideoButton');
+        const tryAgainButton = document.getElementById('tryAgainButton');
+        const specialVideoContainer = document.getElementById('specialVideoContainer');
+        const specialVideoPlayer = document.getElementById('specialVideoPlayer');
+
+        // Ideal Actress Quiz elements (New)
+        const idealActressQuizTitle = document.getElementById('idealActressQuizTitle');
+        const idealActressQuizQuestionElement = document.getElementById('idealActressQuizQuestion');
+        const idealActressQuizOptionsContainer = document.getElementById('idealActressQuizOptions');
+        const idealActressQuizResultSection = document.getElementById('idealActressQuizResult');
+        const idealActressQuizResultText = document.getElementById('idealActressQuizResultText');
+        const idealActressResultVideoContainer = document.getElementById('idealActressResultVideoContainer');
+        const idealActressResultVideoPlayer = document.getElementById('idealActressResultVideoPlayer');
+        const idealActressTryAgainButton = document.getElementById('idealActressTryAgainButton');
+
+
+        const actressForm = document.getElementById('actressForm');
+        // Multi-language name input fields
+        const actressNameZhTwInput = document.getElementById('actressNameZhTw');
+        const actressNameZhCnInput = document.getElementById('actressNameZhCn');
+        const actressNameEnInput = document.getElementById('actressNameEn');
+        const actressNameJaInput = document.getElementById('actressNameJa');
+
+        const actressNationalityInput = document.getElementById('actressNationality');
+        const actressBirthDateInput = document.getElementById('actressBirthDate');
+        const actressCupSizeInput = document.getElementById('actressCupSize');
+        const actressMediaUrlInput = document.getElementById('actressMediaUrl');
+        const actressRecommendedVideoUrlInput = document.getElementById('actressRecommendedVideoUrl'); 
+        const actressWikipediaLinkInput = document.getElementById('actressWikipediaLink');
+        const addEditActressButton = document.getElementById('addEditActressButton');
+        const cancelEditButton = document.getElementById('cancelEditButton');
+        const adminActressList = document.getElementById('adminActressList');
+        let editingActressId = null; // 用於儲存當前編輯的女優ID
+
+        const messageBox = document.getElementById('messageBox');
+
+        // Custom Confirmation Modal elements
+        const confirmDialog = document.getElementById('confirmDialog');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmYesButton = document.getElementById('confirmYes');
+        const confirmNoButton = document.getElementById('confirmNo');
+        let currentConfirmCallback = null; // Stores the callback function for the confirmation
+
+        // Language Dropdown elements
+        const languageDropdownButton = document.getElementById('languageDropdownButton');
+        const languageDropdownMenu = document.getElementById('languageDropdownMenu');
+
+        // Admin panel media preview elements
+        const actressMediaPreviewContainer = document.getElementById('actressMediaPreviewContainer');
+        const noMediaPreviewText = document.getElementById('noMediaPreviewText');
+        const videoLinkPreviewText = document.getElementById('videoLinkPreviewText'); 
+
+        // New elements for Hottest/Newly Added sections
+        const hottestTitle = document.getElementById('hottestTitle');
+        const newlyAddedTitle = document.getElementById('newlyAddedTitle');
+        const hottestActressesContainer = document.getElementById('hottestActresses');
+        const newlyAddedActressesContainer = document.getElementById('newlyAddedActresses');
+
+        // Ad Section elements
+        const adSection1 = document.getElementById('adSection1');
+        const adSection2 = document.getElementById('adSection2'); // New ad section for Google Drive demo
+
+        // Comments elements
+        const commentsSection = document.getElementById('commentsSection');
+        const commentsTitle = document.getElementById('commentsTitle');
+        const commentTextarea = document.getElementById('commentTextarea');
+        const submitCommentButton = document.getElementById('submitCommentButton');
+        const commentList = document.getElementById('commentList');
+
+        let currentActressIdForComments = null; // To store the ID of the actress whose comments are currently displayed
+        let unsubscribeComments = null; // To store the unsubscribe function for the comments listener
+
+        // Age Gate elements
+        const ageGateModal = document.getElementById('ageGateModal');
+        const ageGateTitle = document.getElementById('ageGateTitle');
+        const ageGateMessage = document.getElementById('ageGateMessage');
+        const ageGateYesButton = document.getElementById('ageGateYesButton');
+        const ageGateNoButton = document.getElementById('ageGateNoButton');
+        const accessDeniedMessage = document.getElementById('accessDeniedMessage');
+
+        // Helper to get actress name based on current language
+        function getActressNameByLang(actress, lang) {
+            const nameField = `name_${lang.replace('-', '_')}`; // e.g., 'zh-TW' -> 'name_zh_TW'
+            return actress[nameField] || actress.name_zh_TW || actress.name_en || actress.name_ja || "未知女優"; // Fallback
+        }
+
+        // --- 多國語言設定 ---
+        const translations = {
+            'zh-TW': {
+                appName: "AVNY.com",
+                appSubtitle: "全球AV女優資訊搜尋平台",
+                searchName: "女優名字",
+                inputPlaceholder: "輸入女優名字",
+                nationality: "國籍",
+                allNationalities: "所有國籍",
+                japan: "日本",
+                ageGroup: "年齡區間",
+                allAges: "所有年齡",
+                cupSize: "罩杯",
+                allCupSizes: "所有罩杯",
+                searchButton: "搜尋女優",
+                noResults: "未找到符合條件的女優。",
+                detailNationality: "國籍",
+                detailAge: "歲", 
+                detailCupSize: "罩杯",
+                detailDescription: "簡介",
+                detailDetailedInfo: "詳細資料",
+                detailWikipedia: "維基百科",
+                viewMore: "點此查看更多",
+                viewVideo: "點此觀看影片",
+                close: "×",
+                adminPanel: "添加女優",
+                mainSite: "主要網站",
+                addActress: "新增女優",
+                editActress: "編輯女優",
+                actressName: "女優姓名", // This will be replaced by specific language labels for admin form
+                actressNameZhTw: "女優姓名 (繁體中文)",
+                actressNameZhCn: "女優姓名 (簡體中文)",
+                actressNameEn: "女優姓名 (英文)",
+                actressNameJa: "女優姓名 (日文)",
+                birthDate: "出生日期 (YYYY-MM-DD)",
+                mediaURL: "影片URL (限YouTube或Google雲端硬碟)", // Updated label
+                recommendedVideoURL: "推薦影片URL",
+                add: "新增",
+                save: "儲存",
+                manageActresses: "管理女優資料",
+                edit: "編輯",
+                delete: "刪除",
+                confirmDelete: "確定要刪除這筆資料嗎？",
+                dataSaved: "資料已儲存！",
+                dataDeleted: "資料已刪除！",
+                dataError: "操作失敗，請稍後再試。",
+                unknown: "未知",
+                confirmTitle: "確認刪除",
+                confirmMessageText: "您確定要刪除這筆女優資料嗎？",
+                ageLabelText: "年齡",
+                invalidMedia: "無效影片URL或無法載入 (請確認為公開/非公開YouTube或Google雲端硬碟連結)", // Updated error message
+                mediaPreviewHint: "貼上YouTube影片URL後將在此顯示預覽 (僅支援公開/非公開影片)", // Updated hint to include private video note
+                videoLinkHint: "貼上影片URL後將在此顯示連結提示", 
+                videoLinkGenerated: "將產生可點擊的影片連結", 
+                recommendedVideo: "推薦影片",
+                hottestToday: "今日最辣", // New translation
+                newlyAdded: "最新上線", // New translation
+                likesLabel: "應援數", // New translation
+                supportActress: "應援女優", // New translation
+                supportMessage: "感謝您的應援！", // New translation
+                oldDriverQuizTitle: "老司機就是我", // Quiz translation name change
+                idealActressQuizTitle: "誰是我的理想女優？", // New quiz title
+                backToMain: "返回主頁",
+                quizQuestionNum: "第",
+                quizQuestionText: "題",
+                enterYourAnswer: "輸入你的答案",
+                nextQuestion: "下一題",
+                finishQuiz: "完成",
+                congratulations: "恭喜！",
+                watchSpecialVideo: "觀看特殊影片",
+                failedQuiz: "抱歉，您沒有全部答對。",
+                tryAgain: "再試一次",
+                yourScore: "你的分數",
+                question: "問題",
+                correctAnswer: "正確答案",
+                commentsSectionTitle: "網友留言區", // New
+                commentPlaceholder: "輸入您的留言...", // New
+                commentButton: "留言", // New
+                anonymousUser: "匿名使用者", // New
+                ageGateTitle: "年齡確認",
+                ageGateMessage: "此網站內容僅適合18歲以上使用者。您是否已滿18歲？",
+                ageGateYes: "是，我已滿18歲",
+                ageGateNo: "否，我未滿18歲",
+                accessDenied: "很抱歉，您未滿18歲，無法瀏覽本網站內容。"
+            },
+            'zh-CN': {
+                appName: "AVNY.com",
+                appSubtitle: "全球AV女优信息搜索平台",
+                searchName: "女优名字",
+                inputPlaceholder: "输入女优名字",
+                nationality: "国籍",
+                allNationalities: "所有国籍",
+                japan: "日本",
+                ageGroup: "年龄区间",
+                allAges: "所有年龄",
+                cupSize: "罩杯",
+                allCupSizes: "所有罩杯",
+                searchButton: "搜索女优",
+                noResults: "未找到符合条件的女优。",
+                detailNationality: "国籍",
+                detailAge: "岁", 
+                detailCupSize: "罩杯",
+                detailDescription: "简介",
+                detailDetailedInfo: "详细资料",
+                detailWikipedia: "维基百科",
+                viewMore: "点击查看更多",
+                viewVideo: "点击观看影片",
+                close: "×",
+                adminPanel: "添加女优",
+                mainSite: "主网站",
+                addActress: "新增女优",
+                editActress: "编辑女优",
+                actressName: "女优姓名",
+                actressNameZhTw: "女優姓名 (繁體中文)",
+                actressNameZhCn: "女优姓名 (简体中文)",
+                actressNameEn: "女优姓名 (英文)",
+                actressNameJa: "女优姓名 (日文)",
+                birthDate: "出生日期 (YYYY-MM-DD)",
+                mediaURL: "影片URL (限YouTube或Google云端硬盘)",
+                recommendedVideoURL: "推荐影片URL",
+                add: "新增",
+                save: "保存",
+                manageActresses: "管理女优资料",
+                edit: "编辑",
+                delete: "删除",
+                confirmDelete: "确定要删除这笔资料吗？",
+                dataSaved: "资料已保存！",
+                dataDeleted: "资料已删除！",
+                dataError: "操作失败，请稍后重试。",
+                unknown: "未知",
+                confirmTitle: "确认删除",
+                confirmMessageText: "您确定要删除这笔女优资料吗？",
+                ageLabelText: "年龄",
+                invalidMedia: "无效影片URL或无法加载 (请确认是公开/非公开YouTube或Google云端硬盘链接)",
+                mediaPreviewHint: "粘贴YouTube影片URL后将在此显示预览 (仅支持公开/非公开影片)",
+                videoLinkHint: "粘贴影片URL后将在此显示链接提示", 
+                videoLinkGenerated: "将产生可点击的影片链接", 
+                recommendedVideo: "推荐影片",
+                hottestToday: "今日最辣",
+                newlyAdded: "最新上线",
+                likesLabel: "应援数",
+                supportActress: "应援女优",
+                supportMessage: "感谢您的应援！",
+                oldDriverQuizTitle: "老司机就是我",
+                idealActressQuizTitle: "谁是我的理想女优？",
+                backToMain: "返回主页",
+                quizQuestionNum: "第",
+                quizQuestionText: "题",
+                enterYourAnswer: "输入你的答案",
+                nextQuestion: "下一题",
+                finishQuiz: "完成",
+                congratulations: "恭喜！",
+                watchSpecialVideo: "观看特殊影片",
+                failedQuiz: "抱歉，您没有全部答对。",
+                tryAgain: "再试一次",
+                yourScore: "你的分数",
+                question: "问题",
+                correctAnswer: "正确答案",
+                commentsSectionTitle: "网友留言区",
+                commentPlaceholder: "输入您的留言...",
+                commentButton: "留言",
+                anonymousUser: "匿名用户",
+                ageGateTitle: "年龄确认",
+                ageGateMessage: "此网站内容仅适合18岁以上用户。您是否已满18岁？",
+                ageGateYes: "是，我已满18岁",
+                ageGateNo: "否，我未满18岁",
+                accessDenied: "很抱歉，您未满18岁，无法浏览本网站内容。"
+            },
+            'en': {
+                appName: "AVNY.com",
+                appSubtitle: "Global AV Actress Information Search Platform",
+                searchName: "Actress Name",
+                inputPlaceholder: "Enter actress name",
+                nationality: "Nationality",
+                allNationalities: "All Nationalities",
+                japan: "Japan",
+                ageGroup: "Age Group",
+                allAges: "All Ages",
+                cupSize: "Cup Size",
+                allCupSizes: "All Cup Sizes",
+                searchButton: "Search Actresses",
+                noResults: "No actresses found matching the criteria.",
+                detailNationality: "Nationality",
+                detailAge: "Years Old", 
+                detailCupSize: "Cup Size",
+                detailDescription: "Biography",
+                detailDetailedInfo: "Detailed Information",
+                detailWikipedia: "Wikipedia",
+                viewMore: "Click for more",
+                viewVideo: "Click to watch video",
+                close: "×",
+                adminPanel: "Add Actress",
+                mainSite: "Main Site",
+                addActress: "Add Actress",
+                editActress: "Edit Actress",
+                actressName: "Actress Name",
+                actressNameZhTw: "Actress Name (Traditional Chinese)",
+                actressNameZhCn: "Actress Name (Simplified Chinese)",
+                actressNameEn: "Actress Name (English)",
+                actressNameJa: "Actress Name (Japanese)",
+                birthDate: "Birth Date (YYYY-MM-DD)",
+                mediaURL: "Video URL (YouTube or Google Drive)",
+                recommendedVideoURL: "Recommended Video URL",
+                add: "Add",
+                save: "Save",
+                manageActresses: "Manage Actresses",
+                edit: "Edit",
+                delete: "Delete",
+                confirmDelete: "Are you sure you want to delete this entry?",
+                dataSaved: "Data saved!",
+                dataDeleted: "Data deleted!",
+                dataError: "Operation failed, please try again later.",
+                unknown: "Unknown",
+                confirmTitle: "Confirm Delete",
+                confirmMessageText: "Are you sure you want to delete this actress's data?",
+                ageLabelText: "Age",
+                invalidMedia: "Invalid video URL or failed to load (ensure it's a public/unlisted YouTube or Google Drive link)",
+                mediaPreviewHint: "Paste YouTube video URL for preview (only public/unlisted videos supported)",
+                videoLinkHint: "Paste video URL to display link hint here", 
+                videoLinkGenerated: "A clickable video link will be generated", 
+                recommendedVideo: "Recommended Video",
+                hottestToday: "Today's Hottest",
+                newlyAdded: "Newly Added",
+                likesLabel: "Likes",
+                supportActress: "Support Actress",
+                supportMessage: "Thank you for your support!",
+                oldDriverQuizTitle: "Old Driver Is Me",
+                idealActressQuizTitle: "Who is My Ideal Actress?",
+                backToMain: "Back to Main",
+                quizQuestionNum: "Question ",
+                quizQuestionText: "",
+                enterYourAnswer: "Enter your answer",
+                nextQuestion: "Next Question",
+                finishQuiz: "Finish Quiz",
+                congratulations: "Congratulations!",
+                watchSpecialVideo: "Watch Special Video",
+                failedQuiz: "Sorry, you didn't get all questions correct.",
+                tryAgain: "Try Again",
+                yourScore: "Your Score",
+                question: "Question",
+                correctAnswer: "Correct Answer",
+                commentsSectionTitle: "User Comments",
+                commentPlaceholder: "Enter your comment...",
+                commentButton: "Comment",
+                anonymousUser: "Anonymous User",
+                ageGateTitle: "Age Verification",
+                ageGateMessage: "This website contains content suitable for adults 18 years or older. Are you 18 or older?",
+                ageGateYes: "Yes, I am 18+",
+                ageGateNo: "No, I am under 18",
+                accessDenied: "Sorry, you must be 18 or older to access this website."
+            },
+            'ja': {
+                appName: "AVNY.com",
+                appSubtitle: "世界のAV女優情報検索プラットフォーム",
+                searchName: "女優名",
+                inputPlaceholder: "女優名を入力",
+                nationality: "国籍",
+                allNationalities: "全ての国籍",
+                japan: "日本",
+                ageGroup: "年齢層",
+                allAges: "全ての年齢",
+                cupSize: "カップサイズ",
+                allCupSizes: "全てのカップサイズ",
+                searchButton: "女優を検索",
+                noResults: "条件に一致する女優は見つかりませんでした。",
+                detailNationality: "国籍",
+                detailAge: "歳", 
+                detailCupSize: "カップサイズ",
+                detailDescription: "プロフィール",
+                detailDetailedInfo: "詳細情報",
+                detailWikipedia: "ウィキペディア",
+                viewMore: "詳細はこちら",
+                viewVideo: "動画を見る",
+                close: "×",
+                adminPanel: "女優を追加",
+                mainSite: "メインサイト",
+                addActress: "女優を追加",
+                editActress: "女優を編集",
+                actressName: "女優名",
+                actressNameZhTw: "女優姓名 (繁體中文)",
+                actressNameZhCn: "女優姓名 (簡體中文)",
+                actressNameEn: "女優姓名 (英文)",
+                actressNameJa: "女優姓名 (日本語)",
+                birthDate: "生年月日 (YYYY-MM-DD)",
+                mediaURL: "動画URL (YouTubeまたはGoogleドライブ)",
+                recommendedVideoURL: "おすすめ動画URL",
+                add: "追加",
+                save: "保存",
+                manageActresses: "女優を管理",
+                edit: "編集",
+                delete: "削除",
+                confirmDelete: "このエントリを削除してもよろしいですか？",
+                dataSaved: "データが保存されました！",
+                dataDeleted: "データが削除されました！",
+                dataError: "操作に失敗しました。後でもう一度お試しください。",
+                unknown: "不明",
+                confirmTitle: "削除の確認",
+                confirmMessageText: "この女優データを削除してもよろしいですか？",
+                ageLabelText: "年齢",
+                invalidMedia: "無効な動画URLまたは読み込みに失敗しました (公開/限定公開YouTubeまたはGoogleドライブのリンクであることを確認してください)",
+                mediaPreviewHint: "YouTube動画URLを貼り付けるとここにプレビューが表示されます (公開/限定公開動画のみ対応)",
+                videoLinkHint: "動画URLを貼り付けるとここにリンクのヒントが表示されます", 
+                videoLinkGenerated: "クリック可能な動画リンクが生成されます", 
+                recommendedVideo: "おすすめ動画",
+                hottestToday: "今日の人気",
+                newlyAdded: "新着",
+                likesLabel: "応援数",
+                supportActress: "女優を応援",
+                supportMessage: "応援ありがとうございます！",
+                oldDriverQuizTitle: "老司ドライバーは私",
+                idealActressQuizTitle: "私の理想の女優は誰？",
+                backToMain: "メインに戻る",
+                quizQuestionNum: "問題",
+                quizQuestionText: "",
+                enterYourAnswer: "回答を入力",
+                nextQuestion: "次の質問",
+                finishQuiz: "クイズを終了",
+                congratulations: "おめでとうございます！",
+                watchSpecialVideo: "スペシャルビデオを視聴",
+                failedQuiz: "残念、全問正解できませんでした。",
+                tryAgain: "もう一度挑戦",
+                yourScore: "あなたのスコア",
+                question: "問題",
+                correctAnswer: "正解",
+                commentsSectionTitle: "ユーザーコメント",
+                commentPlaceholder: "コメントを入力...",
+                commentButton: "コメント",
+                anonymousUser: "匿名ユーザー",
+                ageGateTitle: "年齢確認",
+                ageGateMessage: "このウェブサイトのコンテンツは18歳以上のユーザーのみが対象です。あなたは18歳以上ですか？",
+                ageGateYes: "はい、18歳以上です",
+                ageGateNo: "いいえ、18歳未満です",
+                accessDenied: "申し訳ありませんが、18歳未満の方はこのウェブサイトのコンテンツにアクセスできません。"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'zh-TW'; // 預設語言為繁體中文
+
+        function showMessage(message, isError = false) {
+            messageBox.textContent = message;
+            messageBox.className = 'message-box ' + (isError ? 'error' : '');
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        // 顯示自訂確認對話框
+        function showConfirmDialog(message, onConfirmCallback) {
+            confirmMessage.textContent = message;
+            currentConfirmCallback = onConfirmCallback;
+            confirmDialog.classList.remove('hidden');
+        }
+
+        // 隱藏自訂確認對話框
+        function hideConfirmDialog() {
+            confirmDialog.classList.add('hidden');
+            currentConfirmCallback = null;
+        }
+
+        // 確認按鈕事件
+        confirmYesButton.addEventListener('click', () => {
+            if (currentConfirmCallback) {
+                currentConfirmCallback(true);
+            }
+            hideConfirmDialog();
+        });
+
+        // 取消按鈕事件
+        confirmNoButton.addEventListener('click', () => {
+            if (currentConfirmCallback) {
+                currentConfirmCallback(false);
+            }
+            hideConfirmDialog();
+        });
+
+
+        // 應用翻譯
+        function applyTranslations() {
+            const t = translations[currentLang];
+            document.getElementById('appTitle').textContent = t.appName;
+            document.getElementById('appName').textContent = t.appName;
+            document.getElementById('appSubtitle').textContent = t.appSubtitle;
+            document.getElementById('nameSearchLabel').textContent = t.searchName;
+            document.getElementById('nameSearch').placeholder = t.inputPlaceholder;
+            document.getElementById('nationalityFilterLabel').textContent = t.nationality;
+            document.getElementById('allNationalitiesOption').textContent = t.allNationalities;
+            document.getElementById('japanNationalityOption').textContent = t.japan;
+            document.getElementById('ageFilterLabel').textContent = t.ageGroup;
+            document.getElementById('allAgesOption').textContent = t.allAges;
+            document.getElementById('cupSizeFilterLabel').textContent = t.cupSize;
+            document.getElementById('allCupSizesOption').textContent = t.allCupSizes;
+            document.getElementById('searchButton').textContent = t.searchButton;
+
+            // Modal translations
+            document.getElementById('detailNationalityLabel').textContent = t.detailNationality + '：';
+            document.getElementById('detailAgeLabel').textContent = t.ageLabelText + '：';
+            document.getElementById('detailCupSizeLabel').textContent = t.detailCupSize + '：';
+            document.getElementById('detailDescriptionLabel').textContent = t.detailDescription + '：';
+            document.getElementById('detailDetailedInfoLabel').textContent = t.detailDetailedInfo + '：';
+            document.getElementById('detailWikipediaLink').querySelector('strong').textContent = t.detailWikipedia + '：';
+            document.getElementById('detailWikipediaLink').querySelector('a').textContent = t.viewMore;
+            document.getElementById('detailRecommendedVideoLabel').textContent = t.recommendedVideo + '：'; 
+            document.getElementById('detailRecommendedVideoLink').textContent = t.viewVideo; 
+            closeModalButton.innerHTML = t.close;
+            document.getElementById('detailLikesLabel').textContent = t.likesLabel + '：';
+            supportActressText.textContent = t.supportActress;
+
+            // Admin panel translations
+            toggleAdminButton.textContent = adminPanelVisible ? t.mainSite : t.adminPanel;
+            document.getElementById('addActressHeader').textContent = editingActressId ? t.editActress : t.addActress;
+            // Update multi-language name labels
+            document.querySelector('label[for="actressNameZhTw"]').textContent = t.actressNameZhTw;
+            document.querySelector('label[for="actressNameZhCn"]').textContent = t.actressNameZhCn;
+            document.querySelector('label[for="actressNameEn"]').textContent = t.actressNameEn;
+            document.querySelector('label[for="actressNameJa"]').textContent = t.actressNameJa;
+
+            document.getElementById('nationalityLabelAdmin').textContent = t.nationality;
+            document.getElementById('birthDateLabel').textContent = t.birthDate;
+            document.getElementById('cupSizeLabelAdmin').textContent = t.cupSize;
+            document.getElementById('mediaUrlLabel').textContent = t.mediaURL; // Updated label for media
+            document.getElementById('recommendedVideoUrlLabel').textContent = t.recommendedVideoURL; 
+            document.getElementById('wikipediaLinkLabelAdmin').textContent = t.detailWikipedia + '連結';
+            addEditActressButton.textContent = editingActressId ? t.save : t.add;
+            document.getElementById('manageActressesHeader').textContent = t.manageActresses;
+            noMediaPreviewText.textContent = actressMediaUrlInput.value.trim() ? '' : t.mediaPreviewHint; // Use mediaPreviewHint
+            videoLinkPreviewText.textContent = actressRecommendedVideoUrlInput.value.trim() ? t.videoLinkGenerated : t.videoLinkHint;
+
+            // New section titles
+            hottestTitle.textContent = t.hottestToday;
+            newlyAddedTitle.textContent = t.newlyAdded;
+
+            // Custom Confirmation Modal translations
+            confirmYesButton.textContent = translations[currentLang].confirmYes || '是';
+            confirmNoButton.textContent = translations[currentLang].confirmNo || '否';
+
+            // Quiz translations
+            showQuizButton.textContent = t.oldDriverQuizTitle; // Use new title
+            idealActressQuizTitle.textContent = t.idealActressQuizTitle; // Set new quiz title
+            showIdealActressQuizButton.textContent = t.idealActressQuizTitle; // Set new button title
+
+            backToMainFromQuizButton.textContent = t.backToMain;
+            backToMainFromIdealQuizButton.textContent = t.backToMain; // New quiz back button
+
+            quizTitle.textContent = t.oldDriverQuizTitle; // Use new title for the quiz panel
+            quizQuestionElement.placeholder = t.enterYourAnswer; // This should be quizInput placeholder
+            quizInput.placeholder = t.enterYourAnswer;
+            nextQuestionButton.textContent = t.nextQuestion;
+            submitQuizButton.textContent = t.finishQuiz;
+            viewSpecialVideoButton.textContent = t.watchSpecialVideo;
+            tryAgainButton.textContent = t.tryAgain;
+            idealActressTryAgainButton.textContent = t.tryAgain; // New quiz try again
+
+            // Comments section translations
+            commentsTitle.textContent = t.commentsSectionTitle;
+            commentTextarea.placeholder = t.commentPlaceholder;
+            submitCommentButton.textContent = t.commentButton;
+
+            // Age Gate translations
+            ageGateTitle.textContent = t.ageGateTitle;
+            ageGateMessage.textContent = t.ageGateMessage;
+            ageGateYesButton.textContent = t.ageGateYes;
+            ageGateNoButton.textContent = t.ageGateNo;
+            accessDeniedMessage.textContent = t.accessDenied;
+
+            // Update current question text if quiz is active
+            if (quizPanel.classList.contains('active-quiz') && quizQuestions.length > 0) {
+                displayQuestion(); // Re-render current question with updated language
+            }
+            // Update ideal actress quiz question if active
+            if (idealActressQuizPanel.classList.contains('active-quiz') && idealActressQuizQuestions.length > 0) {
+                displayIdealActressQuestion();
+            }
+        }
+
+        // 設定語言
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            applyTranslations();
+            // Re-render main content only if allowed (after age check)
+            if (localStorage.getItem('ageVerified') === 'true') {
+                performSearch(); // 重新渲染搜尋結果以應用新語言
+                if (adminPanelVisible) {
+                    renderAdminActressList(); // 重新渲染管理列表
+                }
+                renderHomepageSections(); // Also re-render homepage sections with new language names
+            }
+            languageDropdownMenu.classList.add('hidden'); // Close dropdown after selection
+        }
+
+        // 語言切換下拉選單生成
+        function setupLanguageSwitcher() {
+            languageDropdownMenu.innerHTML = ''; // Clear previous options
+            Object.keys(translations).forEach(langCode => {
+                const button = document.createElement('button');
+                button.textContent = langCode.toUpperCase();
+                button.classList.add('language-option');
+                if (langCode === currentLang) {
+                    button.classList.add('active');
+                }
+                button.addEventListener('click', () => setLanguage(langCode));
+                languageDropdownMenu.appendChild(button);
+            });
+
+            languageDropdownButton.addEventListener('click', (event) => {
+                languageDropdownMenu.classList.toggle('hidden');
+                event.stopPropagation(); // Prevent document click from immediately closing it
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!languageDropdownMenu.contains(event.target) && event.target !== languageDropdownButton) {
+                    languageDropdownMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        let allActresses = []; // 儲存從 Firestore 獲取的所有女優資料
+
+        // 設定 Firestore 資料監聽器
+        async function setupFirestoreListeners() {
+            if (!isAuthReady) {
+                console.warn("Auth not ready for Firestore listeners.");
+                return;
+            }
+            if (!actressesCollection) {
+                console.error("Firestore collection not initialized.");
+                return;
+            }
+
+            // 首次載入時檢查資料庫是否為空，若空則填充初始資料
+            const initialDocs = await getDocs(actressesCollection);
+            if (initialDocs.empty) {
+                console.log("Database is empty. Populating initial data...");
+                await addInitialActressesToFirestore(); // 呼叫填充函數
+            }
+
+            // 設定實時監聽器
+            onSnapshot(actressesCollection, (snapshot) => {
+                const fetchedActresses = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    // Ensure totalClicks and createdAt have default values if not present
+                    fetchedActresses.push({ 
+                        id: doc.id, 
+                        // Assign default empty strings to new name fields if they don't exist
+                        name_zh_TW: data.name_zh_TW || data.name || '', // Use original 'name' as fallback for zh_TW
+                        name_zh_CN: data.name_zh_CN || '',
+                        name_en: data.name_en || '',
+                        name_ja: data.name_ja || '',
+                        ...data, // Keep existing fields, let new name fields override 'name'
+                        totalClicks: data.totalClicks || 0, // Default to 0 clicks
+                        likes: data.likes || 0, // Default to 0 likes
+                        createdAt: data.createdAt || new Date().toISOString() // Default to current time if not set
+                    });
+                });
+
+                // Client-side deduplication by name (using zh_TW for uniqueness)
+                const uniqueActressesMap = new Map();
+                fetchedActresses.forEach(actress => {
+                    if (actress.name_zh_TW) { // Ensure primary name exists
+                        uniqueActressesMap.set(actress.name_zh_TW, actress);
+                    }
+                });
+                allActresses = Array.from(uniqueActressesMap.values());
+
+                console.log("Actresses data updated from Firestore and deduplicated:", allActresses);
+
+                // 刷新主網站搜尋結果和後台管理列表
+                performSearch();
+                renderHomepageSections(); // Render new sections after data update
+                if (adminPanelVisible) {
+                    renderAdminActressList();
+                }
+            }, (error) => {
+                console.error("Error listening to Firestore:", error);
+                showMessage(translations[currentLang].dataError, true);
+            });
+        }
+
+        // 檢查URL是否為YouTube影片連結
+        function isYouTubeUrl(url) {
+            if (!url) return false;
+            // Robust regex to capture various YouTube formats including Shorts
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(m\.)?(youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|shorts\/|)([\w-]{11})(?:\S+)?$/;
+            return youtubeRegex.test(url);
+        }
+
+        // 從YouTube影片URL中提取影片ID
+        function getYouTubeVideoId(url) {
+            let videoId = '';
+            // Robust regex to extract video ID from various YouTube formats including Shorts
+            const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i;
+            const match = url.match(youtubeRegex);
+            if (match && match[1]) {
+                videoId = match[1];
+            }
+            return videoId;
+        }
+
+        // 構造YouTube嵌入式URL
+        function getYouTubeEmbedUrl(url, autoplay = 0, loop = 0, muted = 0, controls = 1) {
+            const videoId = getYouTubeVideoId(url);
+            if (!videoId) return '';
+            let embedUrl = `https://www.youtube.com/embed/${videoId}?`;
+            embedUrl += `autoplay=${autoplay}`;
+            embedUrl += `&mute=${muted}`;
+            embedUrl += `&loop=${loop}`;
+            if (loop) { // loop requires playlist parameter for single video
+                embedUrl += `&playlist=${videoId}`;
+            }
+            embedUrl += `&controls=${controls}`;
+            embedUrl += `&playsinline=1`; // Important for mobile devices to play inline
+            embedUrl += `&enablejsapi=1`; // Enable JS API for more control if needed
+            embedUrl += `&modestbranding=1`; // Reduced YouTube branding
+            return embedUrl;
+        }
+
+        // 檢查URL是否為泛型影片（MP4、Google Drive等，非YouTube）
+        function isGenericVideoUrl(url) {
+            if (!url) return false;
+            const lowerCaseUrl = url.toLowerCase();
+            const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
+            // Check for common video file extensions directly in the URL
+            if (videoExtensions.some(ext => lowerCaseUrl.includes(ext))) {
+                return true;
+            }
+            // Check for Google Drive video links (publicly shared)
+            if (lowerCaseUrl.includes('drive.google.com/file/d/') || lowerCaseUrl.includes('drive.google.com/open?id=')) {
+                return true;
+            }
+            return false;
+        }
+
+        // 從Google Drive分享連結中提取檔案ID
+        function getGoogleDriveFileId(url) {
+            const match = url.match(/(?:id=|file\/d\/)([^/&?#]+)/);
+            return match ? match[1] : null;
+        }
+
+        // 構造 Google Drive 直接下載/播放連結
+        function getGoogleDriveDirectLink(url) {
+            const fileId = getGoogleDriveFileId(url);
+            if (fileId) {
+                return `https://drive.google.com/uc?export=download&id=${fileId}`;
+            }
+            return url;
+        }
+
+        // 檢查URL是否為Google雲端硬碟圖片連結
+        function isGoogleDriveImageUrl(url) {
+            return url && url.includes('drive.google.com');
+        }
+
+        // 構造 Google 雲端硬碟圖片直接連結
+        function getGoogleDriveImageSrc(url) {
+            const fileId = getGoogleDriveFileId(url);
+            if (fileId) {
+                // 'export=view' is generally better for direct embedding images
+                return `https://drive.google.com/uc?export=view&id=${fileId}`;
+            }
+            return url;
+        }
+
+        // 初始資料填充函數 (只會在資料庫為空時執行)
+        async function addInitialActressesToFirestore() {
+            const initialData = [
+                {
+                    name_zh_TW: "新有菜", name_zh_CN: "新有菜", name_en: "Arina Arina", name_ja: "新有菜", nationality: "日本", birthDate: "1996-12-15", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%96%B0%E6%9C%89%E8%8F%9C",
+                    mediaUrl: "https://www.youtube.com/watch?v=k_jH56l3u1w", // YouTube example
+                    recommendedVideoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Example YouTube URL
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "本庄鈴", name_zh_CN: "本庄铃", name_en: "Suzu Honjo", name_ja: "本庄鈴", nationality: "日本", birthDate: "1997-01-12", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%9C%AC%E5%BA%84%E9%88%B4",
+                    mediaUrl: "https://www.youtube.com/shorts/8ZQL8g0hK5k", // UPDATED: 本庄鈴 Shorts URL
+                    recommendedVideoUrl: "https://www.jable.tv/videos/some-jable-video-id/", // Example Jable URL
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "七澤米亞", name_zh_CN: "七泽米亚", name_en: "Mia Nanasawa", name_ja: "七澤ミア", nationality: "日本", birthDate: "1998-12-13", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E4%B8%83%E6%BE%A4%E7%B1%B3%E4%BA%9E",
+                    mediaUrl: "https://www.youtube.com/shorts/XMjGpX6luoU", // UPDATED: 七澤米亞 Shorts URL
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "三上悠亞", name_zh_CN: "三上悠亚", name_en: "Yua Mikami", name_ja: "三上悠亜", nationality: "日本", birthDate: "1993-08-16", cupSize: "G", description: "測試影片播放", detailedInfo: "這是一個測試用的短影片範例，請確保影片檔案小於10MB，播放時間小於10秒。", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E4%B8%89%E4%B8%8A%E6%82%A0%E4%BA%9E",
+                    mediaUrl: "https://www.youtube.com/shorts/mE11KY54mxk", // UPDATED: 三上悠亞 Shorts URL from user query
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "河北彩伽", name_zh_CN: "河北彩伽", name_en: "Saika Kawakita", name_ja: "河北彩伽", nationality: "日本", birthDate: "1999-04-24", cupSize: "E", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%B2%B3%E5%8C%97%E5%BD%A9%E4%BC%BD",
+                    mediaUrl: "https://www.youtube.com/watch?v=k_jH56l3u1w", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "宮下鈴奈", name_zh_CN: "宫下铃奈", name_en: "Suzuna Miyashita", name_ja: "宮下鈴奈", nationality: "日本", birthDate: "1997-05-01", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E5%AE%AE%E4%B8%8B%E7%8E%B2%E5%A5%88",
+                    mediaUrl: "https://www.youtube.com/shorts/2g81WQcR_z8", // YouTube Shorts example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "胡桃櫻", name_zh_CN: "胡桃樱", name_en: "Kurumi Sakura", name_ja: "胡桃桜", nationality: "日本", birthDate: "1995-12-25", cupSize: "D", description: "", detailedInfo: "", wikipediaLink: "https://japhub.com/?c=21040",
+                    mediaUrl: "https://www.youtube.com/shorts/2RCkDumdfFU", // UPDATED: 胡桃櫻 Shorts URL
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "稻川夏目", name_zh_CN: "稻川夏目", name_en: "Natsume Inagawa", name_ja: "稲川夏目", nationality: "日本", birthDate: "1991-09-30", cupSize: "G", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E7%A8%B2%E5%B7%9D%E5%A4%8F%E7%9B%AE",
+                    mediaUrl: "https://www.youtube.com/watch?v=wXhTHyv-2sI", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "美谷朱音", name_zh_CN: "美谷朱音", name_en: "Akane Maetani", name_ja: "美谷朱音", nationality: "日本", birthDate: "1998-04-19", cupSize: "H", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E7%BE%8E%E8%B0%B7%E6%9C%B1%E9%9F%B3",
+                    mediaUrl: "https://www.youtube.com/watch?v=k_jH56l3u1w", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "篠田優", name_zh_CN: "篠田优", name_en: "Yu Shinoda", name_ja: "篠田ゆう", nationality: "日本", birthDate: "1991-06-28", cupSize: "G", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E7%AF%A0%E7%94%B0%E4%BC%98",
+                    mediaUrl: "https://www.youtube.com/shorts/nGP3e-thz0Q", // UPDATED: 篠田優 Shorts URL
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "桃乃木香奈", name_zh_CN: "桃乃木香奈", name_en: "Kana Momonogi", name_ja: "桃乃木かな", nationality: "日本", birthDate: "1996-12-24", cupSize: "F", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%A1%83%E4%B9%83%E6%9C%A8%E9%A6%99%E5%A5%88",
+                    mediaUrl: "https://www.youtube.com/watch?v=QH2-TGUlwu4", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "波多野結衣", name_zh_CN: "波多野结衣", name_en: "Yui Hatano", name_ja: "波多野結衣", nationality: "日本", birthDate: "1988-05-24", cupSize: "D", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%B3%A2%E5%A4%9A%E9%87%8E%E7%B5%90%E8%A1%A3",
+                    mediaUrl: "https://www.youtube.com/shorts/vbNkmqwB7zc", // UPDATED: 波多野結衣 Shorts URL
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "石川澪", name_zh_CN: "石川澪", name_en: "Mio Ishikawa", name_ja: "石川澪", nationality: "日本", birthDate: "2001-06-06", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E7%9F%B3%E5%B7%9D%E6%BE%AA",
+                    mediaUrl: "https://www.youtube.com/watch?v=k_jH56l3u1w", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "小倉由菜", name_zh_CN: "小仓由菜", name_en: "Yuna Ogura", name_ja: "小倉由菜", nationality: "日本", birthDate: "1998-11-05", cupSize: "D", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E5%B0%8F%E5%80%89%E7%94%B1%E8%8F%9C",
+                    mediaUrl: "https://www.youtube.com/shorts/2g81WQcR_z8", // YouTube Shorts example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "紗倉真菜", name_zh_CN: "纱仓真菜", name_en: "Mana Sakura", name_ja: "紗倉まな", nationality: "日本", birthDate: "1993-03-23", cupSize: "E", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/wiki/%E7%B4%97%E5%80%89%E7%9C%9F%E8%8F%9C",
+                    mediaUrl: "https://www.youtube.com/watch?v=QH2-TGUlwu4", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "八掛海", name_zh_CN: "八挂海", name_en: "Kai Hachigame", name_ja: "八掛海", nationality: "日本", birthDate: "2000-09-02", cupSize: "A", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E5%85%AB%E6%8E%9B%E6%B5%B7",
+                    mediaUrl: "https://www.youtube.com/watch?v=wXhTHyv-2sI", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "涼森玲夢", name_zh_CN: "凉森玲梦", name_en: "Remu Suzumori", name_ja: "涼森れむ", nationality: "日本", birthDate: "1998-11-10", cupSize: "F", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%B6%BC%E6%A3%AE%E7%8E%B2%E5%A4%A2",
+                    mediaUrl: "https://www.youtube.com/watch?v=k_jH56l3u1w", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "櫻空桃", name_zh_CN: "樱空桃", name_en: "Momo Sakura", name_ja: "桜空もも", nationality: "日本", birthDate: "1996-12-03", cupSize: "G", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%A8%B1%E7%A9%BA%E6%A1%83",
+                    mediaUrl: "https://www.youtube.com/shorts/2g81WQcR_z8", // YouTube Shorts example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "大槻響", name_zh_CN: "大槻响", name_en: "Hibiki Otsuki", name_ja: "大槻ひびき", birthDate: "1988-02-21", nationality: "日本", cupSize: "D", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E5%A4%A7%E6%A7%BB%E9%9F%BF",
+                    mediaUrl: "https://www.youtube.com/watch?v=QH2-TGUlwu4", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "吉高寧寧", name_zh_CN: "吉高宁宁", name_en: "Nene Yoshitaka", name_ja: "吉高寧々", nationality: "日本", birthDate: "1997-01-01", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E5%90%89%E9%AB%98%E5%AE%81%E5%AE%81",
+                    mediaUrl: "https://www.youtube.com/watch?v=wXhTHyv-2sI", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "飯島愛", name_zh_CN: "饭岛爱", name_en: "Ai Iijima", name_ja: "飯島愛", nationality: "日本", birthDate: "1972-10-31", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E9%A3% sorprendente%E6%84%9B",
+                    mediaUrl: "https://www.youtube.com/watch?v=k_jH56l3u1w", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "逢見梨花", name_zh_CN: "逢见梨花", name_en: "Rika Aimi", name_ja: "逢見梨花", nationality: "日本", birthDate: "1992-07-18", cupSize: "E", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E9%80%A4%E8%A6%8B%E6%A2%A8%E8%8A%B1",
+                    mediaUrl: "https://www.youtube.com/shorts/2g81WQcR_z8", // YouTube Shorts example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "美咲佳奈", name_zh_CN: "美咲佳奈", name_en: "Kana Misaki", name_ja: "美咲かな", nationality: "日本", birthDate: "1997-01-20", cupSize: "C", description: "", detailedInfo: "", wikipediaLink: "https://baike.baidu.com/item/%E7%BE%8E%E5%92%B2%E4%BD%B3%E5%A5%88/18701244",
+                    mediaUrl: "https://www.youtube.com/shorts/GrXA8yshBxE", // UPDATED: 美咲佳奈 Shorts URL
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "橘瑪麗", name_zh_CN: "橘玛丽", name_en: "Marie Tachibana", name_ja: "橘メアリー", nationality: "日本", birthDate: "1993-07-07", cupSize: "G", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%A9%93%E7%91%AA%E9%BA%97",
+                    mediaUrl: "https://www.youtube.com/watch?v=wXhTHyv-2sI", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "神木麗", name_zh_CN: "神木丽", name_en: "Rei Kamiki", name_ja: "神木麗", nationality: "日本", birthDate: "1994-09-25", cupSize: "E", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E7%A5%9E%E6%9C%A8%E9%BA%97",
+                    mediaUrl: "https://www.youtube.com/shorts/LOkPFqdtRdw", // UPDATED: 神木麗 Shorts URL
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "水野優香", name_zh_CN: "水野优香", name_en: "Yuuka Mizuno", name_ja: "水野優香", nationality: "日本", birthDate: "1999-02-14", cupSize: "D", description: "", detailedInfo: "", wikipediaLink: "https://ja.wikipedia.org/wiki/%E6%B0%B4%E9%87%8E%E5%84%AA%E9%A6%99",
+                    mediaUrl: "https://www.youtube.com/shorts/2g81WQcR_z8", // YouTube Shorts example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "白木優子", name_zh_CN: "白木优子", name_en: "Yuko Shiraki", name_ja: "白木優子", nationality: "日本", birthDate: "1976-01-01", cupSize: "E", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/wiki/%E7%99%BD%E6%9C%A8%E5%84%AA%E5%AD%90",
+                    mediaUrl: "https://www.youtube.com/watch?v=QH2-TGUlwu4", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "大島優香", name_zh_CN: "大岛优香", name_en: "Yuka Ohshima", name_ja: "大島優香", nationality: "日本", birthDate: "1993-10-10", cupSize: "F", description: "", detailedInfo: "", wikipediaLink: "https://zh.wikipedia.org/wiki/%E5%A4%A7%E5%B3%B6%E5%84%AA%E9%A6%99",
+                    mediaUrl: "https://www.youtube.com/watch?v=wXhTHyv-2sI", // YouTube example
+                    recommendedVideoUrl: "",
+                    likes: 0
+                },
+                {
+                    name_zh_TW: "戶田真琴", name_zh_CN: "户田真琴", name_en: "Makoto Toda", name_ja: "戸田真琴", nationality: "日本", birthDate: "1996-03-22", cupSize: "B", description: "測試影片播放，這個是新的短影片。", detailedInfo: "影片大小約1MB，播放時間約10秒。", wikipediaLink: "https://zh.wikipedia.org/zh-tw/%E6%88%B7%E7%94%B0%E7%9C%9F%E7%90%B4",
+                    mediaUrl: "https://www.w3schools.com/html/mov_bbb.mp4", // Generic MP4 example, will be played with <video> tag
+                    recommendedVideoUrl: "",
+                    likes: 0
+                }
+            ];
+
+            try {
+                for (const actress of initialData) {
+                    // 在添加前檢查女優是否已存在
+                    const q = query(actressesCollection, where("name_zh_TW", "==", actress.name_zh_TW)); // Check with zh_TW name
+                    const existingDocs = await getDocs(q);
+
+                    if (existingDocs.empty) {
+                        await addDoc(actressesCollection, {
+                            ...actress,
+                            createdAt: new Date().toISOString(), // Set creation timestamp
+                            totalClicks: 0, // Initialize clicks
+                            likes: 0 // Initialize likes
+                        });
+                        console.log(`Added initial actress: ${actress.name_zh_TW}`);
+                    } else {
+                        console.log(`Actress ${actress.name_zh_TW} already exists, skipping initial population.`);
+                        // Optional: If you want to ensure existing docs have 'likes' field, you can update them here.
+                        // For simplicity, we rely on onSnapshot to handle missing fields with default values.
+                    }
+                }
+                console.log("Initial data population check complete.");
+            } catch (error) {
+                console.error("Error populating initial data:", error);
+                showMessage(translations[currentLang].dataError, true);
+            }
+        }
+
+        // 計算年齡
+        function calculateAge(birthDateString) {
+            if (!birthDateString) return translations[currentLang].unknown;
+            const birthDate = new Date(birthDateString);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        // 渲染女優卡片
+        function renderActressCard(actress, container) {
+            const age = calculateAge(actress.birthDate);
+            const actressName = getActressNameByLang(actress, currentLang); // Get localized name
+            const actressCard = document.createElement('div');
+            actressCard.className = 'actress-card bg-gray-900 p-4 rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 cursor-pointer border border-gray-700 hover:border-red-600 hover:bg-gray-700'; /* 應用新的卡片樣式和邊框顏色，新增hover:bg-gray-700 */
+            
+            let mediaElementHtml = '';
+            // Placeholder video if mediaUrl is missing or invalid
+            const defaultYouTubePlaceholder = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ", 1, 1, 1, 0); 
+
+            if (actress.mediaUrl && isYouTubeUrl(actress.mediaUrl)) {
+                // Autoplay, loop, muted, no controls for search results card
+                const embedUrl = getYouTubeEmbedUrl(actress.mediaUrl, 1, 1, 1, 0); 
+                mediaElementHtml = `
+                    <div class="aspect-ratio-3-4">
+                        <iframe src="${embedUrl}" 
+                                frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                `;
+            } else if (actress.mediaUrl && isGenericVideoUrl(actress.mediaUrl)) {
+                // For generic MP4 or Google Drive links, use <video> tag
+                // Autoplay, loop, muted, no controls for search results card
+                const genericVideoUrl = getGoogleDriveDirectLink(actress.mediaUrl);
+                mediaElementHtml = `
+                    <div class="aspect-ratio-3-4">
+                        <video loop muted playsinline preload="metadata" autoplay>
+                            <source src="${genericVideoUrl}" type="video/mp4">
+                            ${translations[currentLang].invalidMedia}
+                        </video>
+                    </div>
+                `;
+            } else {
+                // Fallback to a generic YouTube placeholder if URL is invalid or not provided
+                mediaElementHtml = `
+                    <div class="aspect-ratio-3-4">
+                        <iframe src="${defaultYouTubePlaceholder}" 
+                                frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                `;
+            }
+
+            actressCard.innerHTML = `
+                ${mediaElementHtml}
+                <h3 class="text-white text-lg font-semibold text-center">${actressName} (${age}${translations[currentLang].detailAge})</h3>
+                <div class="flex items-center justify-center mt-2">
+                    <button class="like-btn text-gray-400 hover:text-red-500 transition duration-300" data-id="${actress.id}">
+                        <i class="fas fa-heart text-2xl"></i>
+                    </button>
+                    <span id="likes-count-${actress.id}" class="text-white text-lg ml-2">${actress.likes || 0}</span>
+                </div>
+            `;
+            // Attach event listener to the card (for opening modal)
+            // Use delegation or attach directly to the card element for opening modal
+            actressCard.addEventListener('click', (e) => {
+                // Only open modal if click is not on the like button
+                if (!e.target.closest('.like-btn')) {
+                    openDetailModal(actress);
+                }
+            });
+
+            // Attach event listener to the like button specifically
+            actressCard.querySelector('.like-btn').addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent modal from opening when clicking the like button
+                handleLikeClick(actress.id);
+            });
+
+            container.appendChild(actressCard);
+
+            // Ensure videos start playing after they are added to DOM (mainly for non-YouTube <video> tags)
+            actressCard.querySelectorAll('video').forEach(video => {
+                video.play().catch(e => console.log("Video autoplay prevented in card:", e));
+            });
+        }
+
+
+        // 顯示搜尋結果
+        function displayResults(filteredActresses) {
+            resultsSection.innerHTML = ''; // 清空之前的結果
+            if (filteredActresses.length === 0) {
+                resultsSection.innerHTML = `<p class="text-white text-center col-span-full text-lg mt-8">${translations[currentLang].noResults}</p>`;
+                return;
+            }
+
+            filteredActresses.forEach(actress => {
+                renderActressCard(actress, resultsSection);
+            });
+        }
+
+        // 開啟女優詳細資訊彈出視窗
+        async function openDetailModal(actress) {
+            // Increment totalClicks and update in Firestore
+            try {
+                const actressDocRef = doc(db, `artifacts/${appId}/public/data/actresses`, actress.id);
+                const updatedClicks = (actress.totalClicks || 0) + 1;
+                await updateDoc(actressDocRef, { totalClicks: updatedClicks });
+                // Update local data immediately for responsive UI
+                actress.totalClicks = updatedClicks; 
+                console.log(`Actress ${getActressNameByLang(actress, currentLang)} clicks updated to ${updatedClicks}`);
+            } catch (error) {
+                console.error("Error updating click count:", error);
+                showMessage(translations[currentLang].dataError, true);
+            }
+
+            const age = calculateAge(actress.birthDate);
+            detailName.textContent = getActressNameByLang(actress, currentLang); // Get localized name for modal title
+            detailNationality.textContent = actress.nationality || translations[currentLang].unknown;
+            detailAge.textContent = `${age}${translations[currentLang].detailAge}`; 
+            detailCupSize.textContent = actress.cupSize || translations[currentLang].unknown;
+            detailDescription.textContent = actress.description || translations[currentLang].unknown;
+            detailDetailedInfo.textContent = actress.detailedInfo || translations[currentLang].unknown;
+            detailWikipediaLink.href = actress.wikipediaLink || '#';
+            if (!actress.wikipediaLink || actress.wikipediaLink === '#') {
+                detailWikipediaLink.classList.add('pointer-events-none', 'opacity-50');
+            } else {
+                detailWikipediaLink.classList.remove('pointer-events-none', 'opacity-50');
+            }
+
+            // Update likes count in modal
+            modalLikesCount.textContent = actress.likes || 0;
+            detailLikeButton.dataset.id = actress.id; // Set the actress ID on the like button
+
+            // Render media in modal with 3:4 aspect ratio
+            detailMediaContainer.innerHTML = ''; // Clear previous content
+            detailMediaContainer.classList.add('aspect-ratio-3-4'); // Apply the aspect ratio container class
+            // Placeholder video for modal (YouTube)
+            const defaultYouTubeModalPlaceholder = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ", 1, 1, 0, 1); 
+
+            let mediaElement;
+            if (actress.mediaUrl && isYouTubeUrl(actress.mediaUrl)) {
+                // Autoplay, loop, unmuted, with controls for modal
+                const embedUrl = getYouTubeEmbedUrl(actress.mediaUrl, 1, 1, 0, 1); 
+                console.log(`Attempting to load YouTube video in modal: ${embedUrl}`);
+                mediaElement = document.createElement('iframe');
+                mediaElement.src = embedUrl;
+                mediaElement.setAttribute('frameborder', '0');
+                mediaElement.setAttribute('allow', 'autoplay; encrypted-media; gyroscope; picture-in-picture');
+                mediaElement.setAttribute('allowfullscreen', '');
+                
+            } else if (actress.mediaUrl && isGenericVideoUrl(actress.mediaUrl)) {
+                // For generic MP4 or Google Drive links, use <video> tag
+                let mediaSourceUrl = getGoogleDriveDirectLink(actress.mediaUrl);
+                console.log(`Attempting to load generic video in modal: ${mediaSourceUrl}`);
+                mediaElement = document.createElement('video');
+                mediaElement.src = mediaSourceUrl;
+                mediaElement.controls = true; // Show controls for main detail view
+                mediaElement.loop = true;
+                mediaElement.muted = false; // Allow sound in detail view
+                mediaElement.playsinline = true;
+                mediaElement.preload = 'auto'; // Preload the video
+                mediaElement.onerror = (e) => {
+                    console.error("Error loading generic video in modal:", e, `URL: ${mediaSourceUrl}`);
+                    // Fallback to placeholder YouTube video if generic video fails to load
+                    detailMediaContainer.innerHTML = `
+                        <iframe src="${defaultYouTubeModalPlaceholder}" 
+                                frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    `;
+                    showMessage(translations[currentLang].invalidMedia, true);
+                };
+                mediaElement.load();
+                mediaElement.play().catch(e => console.log("Generic video autoplay prevented in modal:", e));
+            } else {
+                // If it's not a valid video or missing, show a placeholder YouTube video
+                mediaElement = document.createElement('iframe');
+                mediaElement.src = defaultYouTubeModalPlaceholder;
+                mediaElement.setAttribute('frameborder', '0');
+                mediaElement.setAttribute('allow', 'autoplay; encrypted-media; gyroscope; picture-in-picture');
+                mediaElement.setAttribute('allowfullscreen', '');
+                showMessage(translations[currentLang].invalidMedia, true);
+            }
+            detailMediaContainer.appendChild(mediaElement);
+
+
+            // Handle recommended video display - only show link, no thumbnail
+            if (actress.recommendedVideoUrl && actress.recommendedVideoUrl.trim() !== '') {
+                detailRecommendedVideoLink.href = actress.recommendedVideoUrl;
+                detailRecommendedVideoLink.textContent = translations[currentLang].viewVideo; // Set link text
+                detailRecommendedVideoContainer.classList.remove('hidden');
+            } else {
+                detailRecommendedVideoContainer.classList.add('hidden');
+                detailRecommendedVideoLink.href = '#'; // Clear href
+            }
+
+            actressDetailModal.classList.remove('hidden');
+
+            // --- Comments Section Setup ---
+            currentActressIdForComments = actress.id;
+            // Unsubscribe from previous comments listener if active
+            if (unsubscribeComments) {
+                unsubscribeComments();
+            }
+            // Set up new comments listener
+            const commentsRef = collection(db, `artifacts/${appId}/public/data/actresses/${currentActressIdForComments}/comments`);
+            const q = query(commentsRef, orderBy("timestamp", "desc")); // Order by newest first
+
+            unsubscribeComments = onSnapshot(q, (snapshot) => {
+                const fetchedComments = [];
+                snapshot.forEach(doc => {
+                    fetchedComments.push({ id: doc.id, ...doc.data() });
+                });
+                renderComments(fetchedComments);
+            }, (error) => {
+                console.error("Error listening to comments:", error);
+                showMessage(translations[currentLang].dataError, true);
+            });
+            commentsTitle.textContent = translations[currentLang].commentsSectionTitle;
+            commentTextarea.placeholder = translations[currentLang].commentPlaceholder;
+            submitCommentButton.textContent = translations[currentLang].commentButton;
+            commentTextarea.value = ''; // Clear comment input
+        }
+
+        // Render comments
+        function renderComments(comments) {
+            commentList.innerHTML = ''; // Clear existing comments
+            if (comments.length === 0) {
+                commentList.innerHTML = `<p class="text-gray-400 text-center">${translations[currentLang].noResults} (留言)</p>`; // Add a specific no comments message
+                return;
+            }
+            comments.forEach(comment => {
+                const commentItem = document.createElement('div');
+                commentItem.className = 'comment-item';
+                const commenterId = comment.userId || translations[currentLang].anonymousUser; // Use anonymous if userId is missing
+                const timestamp = comment.timestamp ? new Date(comment.timestamp.toDate()).toLocaleString(currentLang) : translations[current.lang].unknown;
+
+                commentItem.innerHTML = `
+                    <div class="comment-meta">
+                        <span class="comment-user">${commenterId}</span>
+                        <span class="comment-time">${timestamp}</span>
+                    </div>
+                    <p class="comment-text">${comment.commentText}</p>
+                `;
+                commentList.appendChild(commentItem);
+            });
+        }
+
+        // Add a new comment
+        submitCommentButton.addEventListener('click', async () => {
+            const commentText = commentTextarea.value.trim();
+            if (!commentText) {
+                showMessage("留言內容不能為空！", true); // Should be translated
+                return;
+            }
+
+            if (!currentActressIdForComments) {
+                showMessage("無法添加留言，女優 ID 不可用。", true); // Should be translated
+                return;
+            }
+
+            try {
+                const commentsRef = collection(db, `artifacts/${appId}/public/data/actresses/${currentActressIdForComments}/comments`);
+                await addDoc(commentsRef, {
+                    userId: currentUserId || crypto.randomUUID(), // Use Firebase User ID or a random UUID for anonymous
+                    commentText: commentText,
+                    timestamp: serverTimestamp() // Firestore server timestamp
+                });
+                commentTextarea.value = ''; // Clear input
+                showMessage("留言已成功送出！"); // Should be translated
+            } catch (error) {
+                console.error("Error adding comment:", error);
+                showMessage("留言失敗，請稍後再試。", true); // Should be translated
+            }
+        });
+
+
+        // 關閉女優詳細資訊彈出視窗
+        closeModalButton.addEventListener('click', () => {
+            actressDetailModal.classList.add('hidden');
+            // Pause video in modal if playing
+            const videoInModal = detailMediaContainer.querySelector('video');
+            const iframeInModal = detailMediaContainer.querySelector('iframe');
+            if (videoInModal) {
+                videoInModal.pause();
+            }
+            if (iframeInModal) {
+                // YouTube API to stop video. This requires enablejsapi=1 parameter in embed URL
+                iframeInModal.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+            }
+            // Unsubscribe from comments listener when modal closes
+            if (unsubscribeComments) {
+                unsubscribeComments();
+                unsubscribeComments = null;
+            }
+            currentActressIdForComments = null;
+        });
+
+        // 點擊彈出視窗外部關閉
+        actressDetailModal.addEventListener('click', (event) => {
+            if (event.target === actressDetailModal) {
+                actressDetailModal.classList.add('hidden');
+                // Pause video in modal if playing
+                const videoInModal = detailMediaContainer.querySelector('video');
+                const iframeInModal = detailMediaContainer.querySelector('iframe');
+                if (videoInModal) {
+                    videoInModal.pause();
+                }
+                if (iframeInModal) {
+                    iframeInModal.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+                }
+                // Unsubscribe from comments listener when modal closes
+                if (unsubscribeComments) {
+                    unsubscribeComments();
+                    unsubscribeComments = null;
+                }
+                currentActressIdForComments = null;
+            }
+        });
+
+        // 處理應援按鈕點擊事件
+        async function handleLikeClick(actressId) {
+            const actress = allActresses.find(a => a.id === actressId);
+            if (!actress) return;
+
+            try {
+                const actressDocRef = doc(db, `artifacts/${appId}/public/data/actresses`, actressId);
+                const updatedLikes = (actress.likes || 0) + 1;
+                await updateDoc(actressDocRef, { likes: updatedLikes });
+
+                // Update local data
+                actress.likes = updatedLikes;
+
+                // Update card UI
+                const cardLikeCountElement = document.getElementById(`likes-count-${actress.id}`);
+                if (cardLikeCountElement) {
+                    cardLikeCountElement.textContent = updatedLikes;
+                }
+
+                // Update modal UI if open and it's the same actress
+                if (!actressDetailModal.classList.contains('hidden') && detailName.textContent === getActressNameByLang(actress, currentLang)) {
+                    modalLikesCount.textContent = updatedLikes;
+                }
+                showMessage(`${translations[currentLang].supportMessage}`);
+
+            } catch (error) {
+                console.error("Error updating likes:", error);
+                showMessage(translations[currentLang].dataError, true);
+            }
+        }
+
+        // Add event listener for the detail modal like button
+        detailLikeButton.addEventListener('click', (e) => {
+            const actressId = e.currentTarget.dataset.id;
+            if (actressId) {
+                handleLikeClick(actressId);
+            }
+        });
+
+
+        // 執行搜尋
+        function performSearch() {
+            const nameQuery = nameSearchInput.value.toLowerCase().trim();
+            const selectedNationality = nationalityFilter.value;
+            const selectedAgeGroup = ageFilter.value;
+            const selectedCupSize = cupSizeFilter.value;
+
+            const filtered = allActresses.filter(actress => {
+                const age = calculateAge(actress.birthDate);
+                // Search across all name fields
+                const matchesName = nameQuery === '' || 
+                                    (actress.name_zh_TW && actress.name_zh_TW.toLowerCase().includes(nameQuery)) ||
+                                    (actress.name_zh_CN && actress.name_zh_CN.toLowerCase().includes(nameQuery)) ||
+                                    (actress.name_en && actress.name_en.toLowerCase().includes(nameQuery)) ||
+                                    (actress.name_ja && actress.name_ja.toLowerCase().includes(nameQuery));
+
+                const matchesNationality = selectedNationality === '' || (actress.nationality && actress.nationality === selectedNationality);
+                const matchesCupSize = selectedCupSize === '' || (actress.cupSize && actress.cupSize.toLowerCase() === selectedCupSize.toLowerCase());
+
+                let matchesAge = true;
+                if (selectedAgeGroup !== '') {
+                    const [minAge, maxAge] = selectedAgeGroup.split('-').map(Number);
+                    matchesAge = age >= minAge && age <= maxAge;
+                }
+
+                return matchesName && matchesNationality && matchesAge && matchesCupSize;
+            });
+
+            displayResults(filtered);
+        }
+
+        // --- 後台管理功能 ---
+        toggleAdminButton.addEventListener('click', () => {
+            adminPanelVisible = !adminPanelVisible;
+            mainApp.classList.toggle('hidden', adminPanelVisible);
+            homepageSections.classList.toggle('hidden', adminPanelVisible); // Hide homepage sections
+            quizPanel.classList.add('hidden'); // Hide old quiz panel
+            idealActressQuizPanel.classList.add('hidden'); // Hide new quiz panel
+            adminPanel.classList.toggle('hidden', !adminPanelVisible);
+            toggleAdminButton.textContent = adminPanelVisible ? translations[currentLang].mainSite : translations[currentLang].adminPanel;
+
+            if (adminPanelVisible) {
+                renderAdminActressList();
+            }
+        });
+
+        // 渲染後台女優列表
+        function renderAdminActressList() {
+            adminActressList.innerHTML = '';
+            if (allActresses.length === 0) {
+                adminActressList.innerHTML = `<p class="text-white text-center text-lg">${translations[currentLang].noResults}</p>`;
+                return;
+            }
+
+            allActresses.forEach(actress => {
+                const age = calculateAge(actress.birthDate);
+                const actressName = getActressNameByLang(actress, currentLang); // Get localized name
+                const actressItem = document.createElement('div');
+                actressItem.className = 'bg-gray-900 p-4 rounded-lg shadow-md flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0 sm:space-x-4 border border-gray-700'; /* 更改邊框顏色 */
+                actressItem.innerHTML = `
+                    <div class="flex-grow text-center sm:text-left">
+                        <h3 class="text-white text-lg font-semibold">${actressName} (${age}${translations[currentLang].detailAge})</h3>
+                        <p class="text-gray-400">${translations[currentLang].nationality}：${actress.nationality || translations[currentLang].unknown} | ${translations[currentLang].cupSize}：${actress.cupSize || translations[currentLang].unknown} | ${translations[currentLang].likesLabel}：${actress.likes || 0}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="edit-btn py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition duration-300" data-id="${actress.id}">${translations[currentLang].edit}</button>
+                        <button class="delete-btn py-2 px-4 rounded-md bg-red-600 hover:bg-red-700 text-white transition duration-300" data-id="${actress.id}">${translations[currentLang].delete}</button>
+                    </div>
+                `;
+                adminActressList.appendChild(actressItem);
+            });
+
+            // 綁定編輯和刪除按鈕事件
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (event) => editActress(event.target.dataset.id));
+            });
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const actressId = event.target.dataset.id;
+                    showConfirmDialog(translations[currentLang].confirmMessageText, (confirmed) => {
+                        if (confirmed) {
+                            deleteActress(actressId);
+                        }
+                    });
+                });
+            });
+        }
+
+        // 新增/編輯女優資料
+        actressForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const actressData = {
+                name_zh_TW: actressNameZhTwInput.value.trim(),
+                name_zh_CN: actressNameZhCnInput.value.trim(),
+                name_en: actressNameEnInput.value.trim(),
+                name_ja: actressNameJaInput.value.trim(),
+                nationality: actressNationalityInput.value.trim(),
+                birthDate: actressBirthDateInput.value,
+                cupSize: actressCupSizeInput.value.trim().toUpperCase(),
+                mediaUrl: actressMediaUrlInput.value.trim(), // Will contain YouTube or generic video URL
+                recommendedVideoUrl: actressRecommendedVideoUrlInput.value.trim(), 
+                wikipediaLink: actressWikipediaLinkInput.value.trim(),
+                description: "", 
+                detailedInfo: "" ,
+                likes: 0 // New entries start with 0 likes
+            };
+
+            // Validate that at least one name field is provided (ideally zh_TW is primary)
+            if (!actressData.name_zh_TW && !actressData.name_zh_CN && !actressData.name_en && !actressData.name_ja) {
+                showMessage(translations[currentLang].dataError + " (請至少提供一個女優名稱)", true); 
+                return;
+            }
+            if (!actressData.nationality || !actressData.birthDate || !actressData.cupSize) {
+                showMessage(translations[currentLang].dataError, true); 
+                return;
+            }
+            
+            // Validate mediaUrl: must be a YouTube URL or a generic video URL
+            if (actressData.mediaUrl && !(isYouTubeUrl(actressData.mediaUrl) || isGenericVideoUrl(actressData.mediaUrl))) {
+                showMessage(translations[currentLang].invalidMedia, true); // Changed error message to use translation string
+                return;
+            }
+
+            try {
+                if (editingActressId) {
+                    // 編輯現有女優
+                    const actressDocRef = doc(db, `artifacts/${appId}/public/data/actresses`, editingActressId);
+                    // When editing, we don't reset likes unless explicitly told to.
+                    // So we fetch current likes or keep the existing one if not explicitly changed in UI.
+                    const existingActress = allActresses.find(a => a.id === editingActressId);
+                    actressData.likes = existingActress ? existingActress.likes : 0; // Preserve existing likes
+
+                    await updateDoc(actressDocRef, actressData);
+                    showMessage(translations[currentLang].dataSaved);
+                } else {
+                    // 新增女優
+                    await addDoc(actressesCollection, {
+                        ...actressData,
+                        createdAt: new Date().toISOString(), // Set creation timestamp
+                        totalClicks: 0, // Initialize clicks
+                        likes: 0 // Initialize likes for new entries
+                    });
+                    showMessage(translations[currentLang].dataSaved); 
+                }
+                resetForm();
+            } catch (error) {
+                console.error("Error saving actress:", error);
+                showMessage(translations[currentLang].dataError, true);
+            }
+        });
+
+        // 編輯女優
+        function editActress(id) {
+            const actress = allActresses.find(a => a.id === id);
+            if (actress) {
+                editingActressId = id;
+                actressNameZhTwInput.value = actress.name_zh_TW || '';
+                actressNameZhCnInput.value = actress.name_zh_CN || '';
+                actressNameEnInput.value = actress.name_en || '';
+                actressNameJaInput.value = actress.name_ja || '';
+
+                actressNationalityInput.value = actress.nationality;
+                actressBirthDateInput.value = actress.birthDate;
+                actressCupSizeInput.value = actress.cupSize;
+                actressMediaUrlInput.value = actress.mediaUrl || ''; // Load media URL
+                actressRecommendedVideoUrlInput.value = actress.recommendedVideoUrl || ''; 
+                actressWikipediaLinkInput.value = actress.wikipediaLink;
+                document.getElementById('addActressHeader').textContent = translations[currentLang].editActress;
+                addEditActressButton.textContent = translations[currentLang].save;
+                cancelEditButton.classList.remove('hidden');
+                // Set media and video preview when editing
+                updateMediaPreview(actress.mediaUrl);
+                updateVideoLinkPreview(actress.recommendedVideoUrl); 
+                // 捲動到表單頂部
+                actressForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // 取消編輯
+        cancelEditButton.addEventListener('click', () => {
+            resetForm();
+        });
+
+        // 重置表單
+        function resetForm() {
+            editingActressId = null;
+            actressForm.reset();
+            document.getElementById('addActressHeader').textContent = translations[currentLang].addActress;
+            addEditActressButton.textContent = translations[currentLang].add;
+            cancelEditButton.classList.add('hidden');
+            actressNationalityInput.value = "日本"; 
+            updateMediaPreview(''); // Clear media preview
+            updateVideoLinkPreview(''); 
+        }
+
+        // 刪除女優
+        async function deleteActress(id) {
+            try {
+                const actressDocRef = doc(db, `artifacts/${appId}/public/data/actresses`, id);
+                await deleteDoc(actressDocRef);
+                showMessage(translations[currentLang].dataDeleted);
+            } catch (error) {
+                console.error("Error deleting actress:", error);
+                showMessage(translations[currentLang].dataError, true);
+            }
+        }
+
+        // Function to update the media (video only) preview in the admin panel
+        function updateMediaPreview(url) {
+            actressMediaPreviewContainer.innerHTML = ''; // Clear previous content
+            noMediaPreviewText.style.display = 'none';
+            // Default YouTube placeholder for admin preview
+            const defaultYouTubeAdminPlaceholder = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ", 0, 0, 1, 1); 
+
+            if (url) {
+                if (isYouTubeUrl(url)) {
+                    // No autoplay for admin preview, but with controls
+                    const embedUrl = getYouTubeEmbedUrl(url, 0, 0, 1, 1); 
+                    console.log(`Admin Preview: Attempting to load YouTube video: ${embedUrl}`);
+                    const iframeElement = document.createElement('iframe');
+                    iframeElement.src = embedUrl;
+                    iframeElement.setAttribute('frameborder', '0');
+                    iframeElement.setAttribute('allow', 'encrypted-media; gyroscope; picture-in-picture');
+                    iframeElement.setAttribute('allowfullscreen', '');
+                    iframeElement.className = 'actress-card-media'; // Use existing class for styling
+                    iframeElement.style.width = '140px'; /* 調整預覽大小 */
+                    iframeElement.style.height = '105px';
+                    
+                    iframeElement.onload = () => {
+                        console.log("Admin Preview: YouTube iframe loaded.");
+                        noMediaPreviewText.style.display = 'none';
+                        iframeElement.style.display = 'block';
+                    };
+                    iframeElement.onerror = (e) => { // onerror might not fire reliably for iframes
+                        console.error("Admin Preview: Error loading YouTube iframe:", e, `URL: ${url}`);
+                        noMediaPreviewText.textContent = translations[currentLang].invalidMedia;
+                        noMediaPreviewText.style.display = 'block';
+                        iframeElement.style.display = 'none';
+                    };
+                    actressMediaPreviewContainer.appendChild(iframeElement);
+
+                } else if (isGenericVideoUrl(url)) {
+                    const genericVideoUrl = getGoogleDriveDirectLink(url);
+                    console.log(`Admin Preview: Attempting to load generic video: ${genericVideoUrl}`);
+                    const videoElement = document.createElement('video');
+                    videoElement.src = genericVideoUrl;
+                    videoElement.controls = true; // Add controls to the preview video
+                    videoElement.loop = true;
+                    videoElement.muted = true;
+                    videoElement.playsinline = true;
+                    videoElement.preload = 'metadata';
+                    videoElement.className = 'actress-card-media';
+                    videoElement.style.width = '140px'; /* 調整預覽大小 */
+                    videoElement.style.height = '105px';
+                    
+                    videoElement.onloadeddata = () => {
+                        console.log("Admin Preview: Generic video data loaded.");
+                        noMediaPreviewText.style.display = 'none';
+                        videoElement.style.display = 'block';
+                    };
+                    videoElement.onerror = (e) => {
+                        console.error("Admin Preview: Error loading generic video:", e, `URL: ${url}`);
+                        noMediaPreviewText.textContent = translations[currentLang].invalidMedia;
+                        noMediaPreviewText.style.display = 'block';
+                        videoElement.style.display = 'none';
+                    };
+                    actressMediaPreviewContainer.appendChild(videoElement);
+                    videoElement.load();
+                    videoElement.play().catch(e => console.log("Admin Preview: Generic video autoplay prevented:", e));
+
+                } else {
+                    // Not a valid video URL (neither YouTube nor generic)
+                    noMediaPreviewText.textContent = translations[currentLang].invalidMedia;
+                    noMediaPreviewText.style.display = 'block';
+                }
+            } else {
+                // No URL provided
+                noMediaPreviewText.textContent = translations[currentLang].mediaPreviewHint;
+                noMediaPreviewText.style.display = 'block';
+            }
+        }
+
+        // Function to update the video link preview text in the admin panel
+        function updateVideoLinkPreview(url) {
+            if (url && url.trim() !== '') {
+                videoLinkPreviewText.textContent = translations[currentLang].videoLinkGenerated;
+                videoLinkPreviewText.style.color = '#4CAF50';
+            } else {
+                videoLinkPreviewText.textContent = translations[currentLang].videoLinkHint;
+                videoLinkPreviewText.style.color = '#A0A0A0';
+            }
+        }
+
+        // Event listener for the actressMediaUrl input to update preview
+        actressMediaUrlInput.addEventListener('input', (event) => {
+            updateMediaPreview(event.target.value.trim());
+        });
+
+        // Event listener for the recommended video URL input to update preview
+        actressRecommendedVideoUrlInput.addEventListener('input', (event) => {
+            updateVideoLinkPreview(event.target.value.trim());
+        });
+
+        // 渲染首頁的熱門女優和最新上線女優區塊
+        function renderHomepageSections() {
+            // 清空現有內容
+            hottestActressesContainer.innerHTML = '';
+            newlyAddedActressesContainer.innerHTML = '';
+
+            // 今日最辣 (Hottest Today) - 依 likes 降序排列，取前4名
+            const hottestActresses = [...allActresses].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 4); // Sort by likes
+            if (hottestActresses.length > 0) {
+                hottestActresses.forEach(actress => renderActressCard(actress, hottestActressesContainer));
+            } else {
+                hottestActressesContainer.innerHTML = `<p class="text-white text-center col-span-full">${translations[currentLang].noResults}</p>`;
+            }
+
+            // 最新上線 (Newly Added) - 依創建時間降序排列，取前4名
+            const newlyAddedActresses = [...allActresses].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 4); // Changed to 4
+            if (newlyAddedActresses.length > 0) {
+                newlyAddedActresses.forEach(actress => renderActressCard(actress, newlyAddedActressesContainer));
+            } else {
+                newlyAddedActressesContainer.innerHTML = `<p class="text-white text-center col-span-full">${translations[currentLang].noResults}</p>`;
+            }
+        }
+
+        // --- 測驗遊戲邏輯 (老司機就是我) ---
+        const quizQuestions = [
+            {
+                question_zh_TW: "請問三上悠亞的出道年份是哪一年？",
+                question_zh_CN: "请问三上悠亚的出道年份是哪一年？",
+                question_en: "Which year did Yua Mikami debut?",
+                question_ja: "三上悠亜のデビュー年は何年ですか？",
+                correctAnswer_zh_TW: "2015",
+                correctAnswer_zh_CN: "2015",
+                correctAnswer_en: "2015",
+                correctAnswer_ja: "2015"
+            },
+            {
+                question_zh_TW: "被稱為『暗黑版楊丞琳』的女優是誰？",
+                question_zh_CN: "被称为『暗黑版杨丞琳』的女优是谁？",
+                question_en: "Who is the actress known as 'Dark Rainie Yang'?",
+                question_ja: "「ダーク・レイニー・ヤン」と呼ばれる女優は誰ですか？",
+                correctAnswer_zh_TW: "波多野結衣",
+                correctAnswer_zh_CN: "波多野结衣",
+                correctAnswer_en: "Yui Hatano",
+                correctAnswer_ja: "波多野結衣"
+            },
+            {
+                question_zh_TW: "以下哪位女優是以童顏巨乳著稱？ (選項：新有菜, 石川澪, 戶田真琴)",
+                question_zh_CN: "以下哪位女优是以童颜巨乳著称？ (选项：新有菜, 石川澪, 户田真琴)",
+                question_en: "Which of the following actresses is known for her 'baby face and big breasts'? (Options: Arina Arina, Mio Ishikawa, Makoto Toda)",
+                question_ja: "次の女優のうち、童顔巨乳で知られているのは誰ですか？ (選択肢：新有菜、石川澪、戸田真琴)",
+                correctAnswer_zh_TW: "新有菜",
+                correctAnswer_zh_CN: "新有菜",
+                correctAnswer_en: "Arina Arina",
+                correctAnswer_ja: "新有菜"
+            },
+            {
+                question_zh_TW: "哪位女優曾在韓國發展過女團活動？",
+                question_zh_CN: "哪位女优曾在韩国发展过女团活动？",
+                question_en: "Which actress had girl group activities in Korea?",
+                correctAnswer_zh_TW: "三上悠亞",
+                correctAnswer_CN: "三上悠亚",
+                correctAnswer_en: "Yua Mikami",
+                correctAnswer_ja: "三上悠亜"
+            },
+            {
+                question_zh_TW: "哪位女優的代表作是《絕對誘惑》系列？",
+                question_zh_CN: "哪位女优的代表作是《绝对诱惑》系列？",
+                question_en: "Which actress's representative work is the 'Absolute Seduction' series?",
+                correctAnswer_zh_TW: "JULIA",
+                correctAnswer_zh_CN: "JULIA",
+                correctAnswer_en: "JULIA",
+                correctAnswer_ja: "JULIA"
+            },
+            {
+                question_zh_TW: "哪位女優以其活潑開朗的性格和笑容深受歡迎？",
+                question_zh_CN: "哪位女优以其活泼开朗的性格和笑容深受欢迎？",
+                question_en: "Which actress is popular for her cheerful personality and smile?",
+                correctAnswer_zh_TW: "橋本有菜",
+                correctAnswer_zh_CN: "桥本有菜",
+                correctAnswer_en: "Arina Hashimoto",
+                correctAnswer_ja: "橋本有菜"
+            },
+            {
+                question_zh_TW: "哪位女優是原AKB48成員？",
+                question_zh_CN: "哪位女优是原AKB48成员？",
+                question_en: "Which actress was a former AKB48 member?",
+                correctAnswer_zh_TW: "三上悠亞",
+                correctAnswer_zh_CN: "三上悠亚",
+                correctAnswer_en: "Yua Mikami",
+                correctAnswer_ja: "三上悠亜"
+            },
+            {
+                question_zh_TW: "哪位女優被稱為『惠比壽麝香葡萄』的隊長？",
+                question_zh_CN: "哪位女优被称为『惠比寿麝香葡萄』的队长？",
+                question_en: "Which actress is known as the leader of 'Ebisu Muscats'?",
+                correctAnswer_zh_TW: "明日花キララ",
+                correctAnswer_zh_CN: "明日花キララ",
+                correctAnswer_en: "Kirara Asuka",
+                correctAnswer_ja: "明日花キララ"
+            },
+            {
+                question_zh_TW: "哪位女優以她的超大美尻聞名？",
+                question_zh_CN: "哪位女优以她的超大美尻闻名？",
+                question_en: "Which actress is famous for her exceptionally large beautiful buttocks?",
+                correctAnswer_zh_TW: "椎名空",
+                correctAnswer_zh_CN: "椎名空",
+                correctAnswer_en: "Sora Shiina",
+                correctAnswer_ja: "椎名そら"
+            },
+            {
+                question_zh_TW: "哪位女優的藝名是以水果命名？",
+                question_zh_CN: "哪位女优的艺名是以水果命名？",
+                question_en: "Which actress's stage name is named after a fruit?",
+                correctAnswer_zh_TW: "桃乃木香奈",
+                correctAnswer_zh_CN: "桃乃木香奈",
+                correctAnswer_en: "Kana Momonogi",
+                correctAnswer_ja: "桃乃木かな"
+            }
+        ];
+        
+        let shuffledQuizQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const specialVideoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=1&loop=1&playlist=dQw4w9WgXcQ"; // Rick Astley - Never Gonna Give You Up
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startGame() {
+            shuffledQuizQuestions = shuffleArray([...quizQuestions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            quizInput.value = '';
+            quizResultSection.classList.add('hidden');
+            specialVideoContainer.classList.add('hidden');
+            specialVideoPlayer.src = ''; // Clear video
+            nextQuestionButton.classList.remove('hidden');
+            submitQuizButton.classList.add('hidden');
+            quizPanel.classList.add('active-quiz'); // Add active state for styling/logic
+
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            if (currentQuestionIndex < shuffledQuizQuestions.length) {
+                const question = shuffledQuizQuestions[currentQuestionIndex];
+                const questionKey = `question_${currentLang.replace('-', '_')}`;
+                quizQuestionElement.textContent = `${translations[currentLang].quizQuestionNum}${currentQuestionIndex + 1}${translations[currentLang].quizQuestionText}: ${question[questionKey]}`;
+                quizInput.value = ''; // Clear input for new question
+                quizInput.focus();
+
+                if (currentQuestionIndex === shuffledQuizQuestions.length - 1) {
+                    nextQuestionButton.classList.add('hidden');
+                    submitQuizButton.classList.remove('hidden');
+                } else {
+                    nextQuestionButton.classList.remove('hidden');
+                    submitQuizButton.classList.add('hidden');
+                }
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = quizInput.value.toLowerCase().trim();
+            const question = shuffledQuizQuestions[currentQuestionIndex];
+            const correctAnswerKey = `correctAnswer_${currentLang.replace('-', '_')}`;
+            const correctAnswer = question[correctAnswerKey].toLowerCase().trim();
+
+            if (userAnswer === correctAnswer) {
+                score++;
+            }
+            
+            currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuizQuestions.length) {
+                displayQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            quizInput.classList.add('hidden');
+            nextQuestionButton.classList.add('hidden');
+            submitQuizButton.classList.add('hidden');
+            quizResultSection.classList.remove('hidden');
+            quizPanel.classList.remove('active-quiz'); // Remove active state
+
+            quizScoreText.textContent = `${translations[currentLang].yourScore}: ${score} / ${shuffledQuizQuestions.length}`;
+
+            if (score === shuffledQuizQuestions.length) {
+                quizResultMessage.textContent = translations[currentLang].congratulations;
+                viewSpecialVideoButton.classList.remove('hidden');
+                tryAgainButton.classList.add('hidden');
+            } else {
+                quizResultMessage.textContent = translations[currentLang].failedQuiz;
+                viewSpecialVideoButton.classList.add('hidden');
+                tryAgainButton.classList.remove('hidden');
+            }
+        }
+
+        viewSpecialVideoButton.addEventListener('click', () => {
+            specialVideoContainer.classList.remove('hidden');
+            specialVideoPlayer.src = specialVideoUrl;
+            // Use postMessage to play the video in the iframe
+            specialVideoPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            viewSpecialVideoButton.classList.add('hidden'); // Hide button after clicking
+        });
+
+        tryAgainButton.addEventListener('click', () => {
+            quizResultSection.classList.add('hidden');
+            specialVideoContainer.classList.add('hidden');
+            specialVideoPlayer.src = '';
+            quizInput.classList.remove('hidden');
+            startGame();
+        });
+
+        nextQuestionButton.addEventListener('click', checkAnswer);
+        submitQuizButton.addEventListener('click', checkAnswer); // Last question uses submit button
+
+        // --- 心理測驗遊戲邏輯 (誰是我的理想女優？) ---
+        const idealActressQuizQuestions = [
+            {
+                question_zh_TW: "你喜歡的女優類型是？",
+                question_zh_CN: "你喜欢的女优类型是？",
+                question_en: "What type of actress do you prefer?",
+                question_ja: "あなたが好きな女優のタイプは？",
+                options: [
+                    { text_zh_TW: "活力陽光型", text_zh_CN: "活力阳光型", text_en: "Energetic and sunny", text_ja: "元気で明るいタイプ", type: 'A' },
+                    { text_zh_TW: "溫柔氣質型", text_zh_CN: "温柔气质型", text_en: "Gentle and elegant", text_ja: "穏やかで上品なタイプ", type: 'B' },
+                    { text_zh_TW: "性感成熟型", text_zh_CN: "性感成熟型", text_en: "Sexy and mature", text_ja: "セクシーで大人っぽいタイプ", type: 'C' }
+                ]
+            },
+            {
+                question_zh_TW: "你對女優的吸引力主要來自？",
+                question_zh_CN: "你对女优的吸引力主要来自？",
+                question_en: "Your attraction to an actress mainly comes from?",
+                question_ja: "女優の魅力は主にどこから？",
+                options: [
+                    { text_zh_TW: "甜美笑容", text_zh_CN: "甜美笑容", text_en: "Sweet smile", text_ja: "甘い笑顔", type: 'A' },
+                    { text_zh_TW: "清純可愛", text_zh_CN: "清纯可爱", text_en: "Pure and cute", text_ja: "清純で可愛い", type: 'B' },
+                    { text_zh_TW: "火辣身材", text_zh_CN: "火辣身材", text_en: "Hot figure", text_ja: "ホットなスタイル", type: 'C' }
+                ]
+            },
+            {
+                question_zh_TW: "當你心情不好時，你會希望女優怎麼安慰你？",
+                question_zh_CN: "当你心情不好时，你会希望女优怎么安慰你？",
+                question_en: "When you're feeling down, how would you want an actress to comfort you?",
+                question_ja: "気分が落ち込んでいる時、女優にどう慰めてほしいですか？",
+                options: [
+                    { text_zh_TW: "溫柔陪伴，靜靜聆聽", text_zh_CN: "温柔陪伴，静静聆听", text_en: "Gentle companionship, quietly listening", text_ja: "優しく寄り添い、静かに話を聞いてほしい", type: 'B' },
+                    { text_zh_TW: "開朗活潑，逗你開心", text_zh_CN: "开朗活泼，逗你开心", text_en: "Cheerful and lively, making you happy", text_ja: "明るく振る舞い、笑わせてほしい", type: 'A' },
+                    { text_zh_TW: "給你一個熱情的擁抱", text_zh_CN: "给你一个热情的擁抱", text_en: "Giving you a passionate hug", text_ja: "情熱的なハグをしてほしい", type: 'C' }
+                ]
+            }
+        ];
+
+        let currentIdealActressQuestionIndex = 0;
+        let idealActressScores = { 'A': 0, 'B': 0, 'C': 0 };
+
+        function startIdealActressQuiz() {
+            currentIdealActressQuestionIndex = 0;
+            idealActressScores = { 'A': 0, 'B': 0, 'C': 0 };
+            idealActressQuizResultSection.classList.add('hidden');
+            idealActressResultVideoContainer.classList.add('hidden'); // Hide video container
+            idealActressResultVideoPlayer.src = ''; // Clear video source
+            idealActressQuizPanel.classList.add('active-quiz');
+            displayIdealActressQuestion();
+        }
+
+        function displayIdealActressQuestion() {
+            if (currentIdealActressQuestionIndex < idealActressQuizQuestions.length) {
+                const question = idealActressQuizQuestions[currentIdealActressQuestionIndex];
+                const questionKey = `question_${currentLang.replace('-', '_')}`;
+                idealActressQuizQuestionElement.textContent = question[questionKey];
+                idealActressQuizOptionsContainer.innerHTML = ''; // Clear previous options
+
+                question.options.forEach((option, index) => {
+                    const optionButton = document.createElement('button');
+                    const optionTextKey = `text_${currentLang.replace('-', '_')}`;
+                    optionButton.textContent = `${String.fromCharCode(65 + index)}. ${option[optionTextKey]}`; // A, B, C...
+                    optionButton.className = 'ideal-quiz-option-button'; // Use common class for styling
+                    optionButton.dataset.type = option.type;
+                    optionButton.addEventListener('click', () => selectIdealActressOption(option.type));
+                    idealActressQuizOptionsContainer.appendChild(optionButton);
+                });
+            } else {
+                finishIdealActressQuiz();
+            }
+        }
+
+        function selectIdealActressOption(type) {
+            idealActressScores[type]++;
+            currentIdealActressQuestionIndex++;
+            displayIdealActressQuestion();
+        }
+
+        function finishIdealActressQuiz() {
+            let maxScore = -1;
+            let idealType = null;
+            let isTie = false;
+
+            for (const type in idealActressScores) {
+                if (idealActressScores[type] > maxScore) {
+                    maxScore = idealActressScores[type];
+                    idealType = type;
+                    isTie = false;
+                } else if (idealActressScores[type] === maxScore) {
+                    isTie = true; // Indicates a tie
+                }
+            }
+
+            let resultText = translations[currentLang].idealActressQuizResultDefault;
+            let actressNameForVideo = ''; // To store the actress name for video lookup
+
+            if (!isTie) { // Only provide specific result if there's no tie
+                if (idealType === 'A') {
+                    resultText = translations[currentLang].idealActressQuizResult1; // Energetic/Sunny (新有菜)
+                    actressNameForVideo = '新有菜';
+                } else if (idealType === 'B') {
+                    resultText = translations[currentLang].idealActressQuizResult2; // Gentle/Elegant (三上悠亞)
+                    actressNameForVideo = '三上悠亞';
+                } else if (idealType === 'C') {
+                    resultText = translations[currentLang].idealActressQuizResult3; // Sexy/Mature (波多野結衣)
+                    actressNameForVideo = '波多野結衣';
+                }
+            }
+            
+            idealActressQuizResultText.innerHTML = resultText; // Use innerHTML for bold text
+            idealActressQuizResultSection.classList.remove('hidden');
+            idealActressQuizOptionsContainer.classList.add('hidden'); // Hide options
+            idealActressQuizQuestionElement.classList.add('hidden'); // Hide question
+            idealActressQuizPanel.classList.remove('active-quiz');
+
+            // Find the actress and display their video
+            const targetActress = allActresses.find(a => a.name_zh_TW === actressNameForVideo);
+            if (targetActress && targetActress.mediaUrl) {
+                // Autoplay, loop, unmuted, with controls for modal. This ensures autoplay.
+                const embedUrl = getYouTubeEmbedUrl(targetActress.mediaUrl, 1, 1, 0, 1); 
+                idealActressResultVideoPlayer.src = embedUrl;
+                idealActressResultVideoPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); // Force autoplay
+                idealActressResultVideoContainer.classList.remove('hidden');
+            } else {
+                idealActressResultVideoContainer.classList.add('hidden');
+                idealActressResultVideoPlayer.src = '';
+            }
+        }
+
+        idealActressTryAgainButton.addEventListener('click', () => {
+            idealActressQuizResultSection.classList.add('hidden');
+            idealActressResultVideoContainer.classList.add('hidden'); // Hide video container when restarting
+            idealActressResultVideoPlayer.src = ''; // Clear video source
+            idealActressQuizOptionsContainer.classList.remove('hidden');
+            idealActressQuizQuestionElement.classList.remove('hidden');
+            startIdealActressQuiz();
+        });
+
+
+        // --- 頁面顯示切換 ---
+        showQuizButton.addEventListener('click', () => {
+            mainApp.classList.add('hidden');
+            adminPanel.classList.add('hidden');
+            homepageSections.classList.add('hidden'); 
+            idealActressQuizPanel.classList.add('hidden'); // Hide new quiz panel
+            quizPanel.classList.remove('hidden');
+            startGame(); // Start the old quiz when the button is clicked
+        });
+
+        showIdealActressQuizButton.addEventListener('click', () => {
+            mainApp.classList.add('hidden');
+            adminPanel.classList.add('hidden');
+            homepageSections.classList.add('hidden');
+            quizPanel.classList.add('hidden'); // Hide old quiz panel
+            idealActressQuizPanel.classList.remove('hidden');
+            startIdealActressQuiz(); // Start the new quiz
+        });
+
+
+        backToMainFromQuizButton.addEventListener('click', () => {
+            quizPanel.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            homepageSections.classList.remove('hidden'); 
+            quizInput.classList.remove('hidden'); // Ensure input is visible for next game
+            quizResultSection.classList.add('hidden'); // Hide results
+            specialVideoContainer.classList.add('hidden'); // Hide video
+            // Stop video in special quiz
+            specialVideoPlayer.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+            specialVideoPlayer.src = ''; // Clear video
+        });
+
+        backToMainFromIdealQuizButton.addEventListener('click', () => {
+            idealActressQuizPanel.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            homepageSections.classList.remove('hidden');
+            idealActressQuizOptionsContainer.classList.remove('hidden'); // Ensure options are visible for next game
+            idealActressQuizQuestionElement.classList.remove('hidden'); // Ensure question is visible
+            idealActressResultVideoContainer.classList.add('hidden'); // Hide video container when going back to main
+            // Stop video in ideal actress quiz
+            idealActressResultVideoPlayer.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+            idealActressResultVideoPlayer.src = ''; // Clear video source
+        });
+
+        // Function to hide all main content areas
+        function hideAllContent() {
+            homepageSections.classList.add('hidden');
+            mainApp.classList.add('hidden');
+            adminPanel.classList.add('hidden');
+            quizPanel.classList.add('hidden');
+            idealActressQuizPanel.classList.add('hidden');
+        }
+
+        // Function to show main app content
+        function showMainAppContent() {
+            homepageSections.classList.remove('hidden');
+            mainApp.classList.remove('hidden');
+            // Hide other panels explicitly
+            adminPanel.classList.add('hidden');
+            quizPanel.classList.add('hidden');
+            idealActressQuizPanel.classList.add('hidden');
+        }
+
+        // Age verification logic
+        function checkAgeVerification() {
+            const ageVerified = localStorage.getItem('ageVerified');
+            if (ageVerified === 'true') {
+                showMainAppContent();
+                initializeAppContent(); // Proceed with app initialization
+            } else {
+                hideAllContent();
+                ageGateModal.classList.remove('hidden');
+                applyTranslations(); // Apply translations to age gate as well
+            }
+        }
+
+        ageGateYesButton.addEventListener('click', () => {
+            localStorage.setItem('ageVerified', 'true');
+            ageGateModal.classList.add('hidden'); // Close the modal
+            accessDeniedMessage.classList.add('hidden'); // Ensure denial message is hidden
+            showMainAppContent();
+            initializeAppContent(); // Proceed with app initialization
+        });
+
+        ageGateNoButton.addEventListener('click', () => {
+            localStorage.setItem('ageVerified', 'false');
+            ageGateModal.classList.add('hidden'); // Close the modal
+            hideAllContent(); // Ensure all content is hidden
+            accessDeniedMessage.classList.remove('hidden');
+            // Optionally, disable language switcher if access is denied
+            languageDropdownButton.disabled = true;
+        });
+
+        // Encapsulate the original DOMContentLoaded logic into a function
+        function initializeAppContent() {
+            // Firebase initialization
+            app = initializeApp(firebaseConfig); 
+            auth = getAuth(app);
+            db = getFirestore(app);
+            actressesCollection = collection(db, `artifacts/${appId}/public/data/actresses`);
+
+            // Firebase Auth Listener
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                } else {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        try {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                            currentUserId = auth.currentUser.uid;
+                        } catch (error) {
+                            console.error("Error signing in with custom token:", error);
+                            // Fallback to anonymous if custom token fails
+                            await signInAnonymously(auth);
+                            currentUserId = auth.currentUser.uid;
+                        }
+                    } else {
+                        // If no custom token, sign in anonymously
+                        await signInAnonymously(auth);
+                        currentUserId = auth.currentUser.uid;
+                    }
+                }
+                isAuthReady = true;
+                console.log("Firebase Auth Ready. User ID:", currentUserId);
+                setupFirestoreListeners(); // Setup Firestore listener after auth is ready
+            });
+
+            // Add event listener for the search button
+            searchButton.addEventListener('click', performSearch);
+
+            // Update Ad Section 1 with the provided Google Drive image
+            const googleDriveAdUrl1 = 'https://drive.google.com/file/d/1Q5piwFkOS6w1iUiGd2I66t4IG2WngJYc/view?usp=sharing';
+            adSection1.innerHTML = `<img src="${getGoogleDriveImageSrc(googleDriveAdUrl1)}" alt="順暢寫程式廣告" class="w-full h-auto rounded-lg">`;
+
+            // Update Ad Section 2 with a Google Drive image (placeholder example)
+            const googleDriveImagePlaceholderUrl = 'https://drive.google.com/file/d/1Z_D3-JvN4V-B3F7G6H8I9K0L1M2N3O4P/view'; // Placeholder URL, replace with actual
+            adSection2.innerHTML = `<img src="${getGoogleDriveImageSrc(googleDriveImagePlaceholderUrl)}" alt="Google Drive 廣告範例" class="w-full h-auto rounded-lg">`;
+
+
+            // Set up language switcher and apply initial translations
+            setupLanguageSwitcher();
+            applyTranslations();
+            updateMediaPreview(''); // Initialize media preview with empty state
+            updateVideoLinkPreview(''); // Initialize video link preview with empty state
+        }
+
+        // Initial check for age verification when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', checkAgeVerification);
+    </script>
+</body>
+</html>
