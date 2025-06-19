@@ -2973,28 +2973,30 @@
             // Add event listener for the search button
             searchButton.addEventListener('click', performSearch);
 
-        function getGoogleDriveImageSrc(driveUrl) {
-            const match = driveUrl.match(/\/d\/([^/]+)\//);
-            if (match && match[1]) {
-                const fileId = match[1];
-                return `https://drive.google.com/uc?export=view&id=${fileId}`;
-            } else {
-                console.warn("❗ 無法解析 Google Drive 圖片 ID，請檢查網址格式是否為： https://drive.google.com/file/d/FILE_ID/view");
-                return '';
-            }
-        }
             // Update Ad Section 1 with the provided Google Drive image
-            const googleDriveAdUrl1 = 'https://drive.google.com/file/d/1Q5piwFkOS6w1iUiGd2I66t4IG2WngJYc/view?usp=sharing';
-
-            const adImageUrl = getGoogleDriveImageSrc(googleDriveAdUrl1);
-
-            if (adImageUrl && adSection1) {
-                adSection1.innerHTML = `
-                    <img src="${adImageUrl}" alt="廣告圖" class="w-full h-auto rounded-lg shadow-md">
-                `;
-            } else {
-                console.error("❌ 無法顯示廣告圖片：adImageUrl 或 adSection1 為 null");
+           function getGoogleDriveImageSrc(driveUrl) {
+                const match = driveUrl.match(/\/d\/([^/]+)\//);
+                if (match && match[1]) {
+                    const fileId = match[1];
+                    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+                } else {
+                    console.warn("❗ 無法解析 Google Drive 圖片 ID，請檢查網址格式是否為： https://drive.google.com/file/d/FILE_ID/view");
+                    return '';
+                }
             }
+
+         window.addEventListener('DOMContentLoaded', () => {
+                const googleDriveAdUrl1 = 'https://drive.google.com/file/d/1Q5piwFkOS6w1iUiGd2I66t4IG2WngJYc/view?usp=sharing';
+                const adImageUrl = getGoogleDriveImageSrc(googleDriveAdUrl1);
+
+                if (adImageUrl && adSection1) {
+                        adSection1.innerHTML = `
+                            <img src="${adImageUrl}" alt="廣告圖" class="w-full h-auto rounded-lg shadow-md border border-gray-500">
+                        `;
+                    } else {
+                            console.error("❌ 無法顯示廣告圖片：adImageUrl 或 adSection1 為 null");
+                    }
+                });
             // Update Ad Section 2 with a Google Drive image (placeholder example)
             const googleDriveImagePlaceholderUrl = 'https://drive.google.com/file/d/1Z_D3-JvN4V-B3F7G6H8I9K0L1M2N3O4P/view'; // Placeholder URL, replace with actual
             adSection2.innerHTML = `<img src="${getGoogleDriveImageSrc(googleDriveImagePlaceholderUrl)}" alt="Google Drive 廣告範例" class="w-full h-auto rounded-lg">`;
