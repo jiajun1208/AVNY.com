@@ -1946,8 +1946,8 @@
             detailNationality.textContent = actress.nationality || translations[currentLang].unknown;
             detailAge.textContent = `${age}${translations[currentLang].detailAge}`; 
             detailCupSize.textContent = actress.cupSize || translations[currentLang].unknown;
-            detailDescription.textContent = actress.description || translations[currentLang].unknown;
-            detailDetailedInfo.textContent = actress.detailedInfo || translations[currentLang].unknown;
+            detailDescription.textContent = actress.Description || translations[currentLang].unknown;
+            detailDetailedInfo.textContent = actress.DetailedInfo || translations[currentLang].unknown;
             detailWikipediaLink.href = actress.wikipediaLink || '#';
             if (!actress.wikipediaLink || actress.wikipediaLink === '#') {
                 detailWikipediaLink.classList.add('pointer-events-none', 'opacity-50');
