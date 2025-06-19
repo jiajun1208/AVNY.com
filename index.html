@@ -668,6 +668,19 @@
                            class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
                 </div>
                 <div>
+                    <label for="actressDescription" id="descriptionLabelAdmin" class="block text-white text-base font-medium mb-2">簡介</label>
+                    <textarea id="actressDescription"
+                          class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600"
+                          placeholder="輸入女優簡介..."></textarea>
+                </div>
+
+                <div>
+                    <label for="actressDetailedInfo" id="detailedInfoLabelAdmin" class="block text-white text-base font-medium mb-2">詳細資料</label>
+                    <textarea id="actressDetailedInfo"
+                          class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600"
+                          placeholder="輸入女優詳細資料..."></textarea>
+                </div>
+                <div>
                     <label for="actressMediaUrl" id="mediaUrlLabel" class="block text-white text-base font-medium mb-2">影片URL (限YouTube)</label>
                     <input type="url" id="actressMediaUrl"
                            class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
@@ -856,6 +869,8 @@
         const detailCupSize = document.getElementById('detailCupSize');
         const detailDescription = document.getElementById('detailDescription');
         const detailDetailedInfo = document.getElementById('detailDetailedInfo');
+        const actressDescriptionInput = document.getElementById('actressDescription'); // 新增
+        const actressDetailedInfoInput = document.getElementById('actressDetailedInfo'); // 新增
         const detailWikipediaLink = document.getElementById('detailWikipediaLink').querySelector('a');
         const detailRecommendedVideoContainer = document.getElementById('detailRecommendedVideoContainer');
         const detailRecommendedVideoLink = document.getElementById('detailRecommendedVideoLink');
@@ -900,6 +915,8 @@
         const actressNationalityInput = document.getElementById('actressNationality');
         const actressBirthDateInput = document.getElementById('actressBirthDate');
         const actressCupSizeInput = document.getElementById('actressCupSize');
+        const actressDescriptionInput = document.getElementById('actressDescription'); // 新增
+        const actressDetailedInfoInput = document.getElementById('actressDetailedInfo'); // 新增
         const actressMediaUrlInput = document.getElementById('actressMediaUrl');
         const actressRecommendedVideoUrlInput = document.getElementById('actressRecommendedVideoUrl'); 
         const actressWikipediaLinkInput = document.getElementById('actressWikipediaLink');
@@ -1352,6 +1369,8 @@
             document.getElementById('nationalityLabelAdmin').textContent = t.nationality;
             document.getElementById('birthDateLabel').textContent = t.birthDate;
             document.getElementById('cupSizeLabelAdmin').textContent = t.cupSize;
+            document.getElementById('descriptionLabelAdmin').textContent = t.description; // 新增
+            document.getElementById('detailedInfoLabelAdmin').textContent = t.detailedInfo; // 新增
             document.getElementById('mediaUrlLabel').textContent = t.mediaURL; // Updated label for media
             document.getElementById('recommendedVideoUrlLabel').textContent = t.recommendedVideoURL; 
             document.getElementById('wikipediaLinkLabelAdmin').textContent = t.detailWikipedia + '連結';
@@ -2262,8 +2281,8 @@
                 mediaUrl: actressMediaUrlInput.value.trim(), // Will contain YouTube or generic video URL
                 recommendedVideoUrl: actressRecommendedVideoUrlInput.value.trim(), 
                 wikipediaLink: actressWikipediaLinkInput.value.trim(),
-                description: "", 
-                detailedInfo: "" ,
+                description: actressDescriptionInput.value(), 
+                detailedInfo: actressDetailedInfoInput.value() ,
                 likes: 0 // New entries start with 0 likes
             };
 
@@ -2324,6 +2343,8 @@
                 actressNationalityInput.value = actress.nationality;
                 actressBirthDateInput.value = actress.birthDate;
                 actressCupSizeInput.value = actress.cupSize;
+                actressDescriptionInput.value = actress.description || ''; // 新增
+                actressDetailedInfoInput.value = actress.detailedInfo || ''; // 新增
                 actressMediaUrlInput.value = actress.mediaUrl || ''; // Load media URL
                 actressRecommendedVideoUrlInput.value = actress.recommendedVideoUrl || ''; 
                 actressWikipediaLinkInput.value = actress.wikipediaLink;
@@ -2351,6 +2372,8 @@
             addEditActressButton.textContent = translations[currentLang].add;
             cancelEditButton.classList.add('hidden');
             actressNationalityInput.value = "日本"; 
+            actressDescriptionInput.value = ''; // 新增
+            actressDetailedInfoInput.value = ''; // 新增
             updateMediaPreview(''); // Clear media preview
             updateVideoLinkPreview(''); 
         }
