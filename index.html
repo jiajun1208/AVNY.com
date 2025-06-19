@@ -1929,6 +1929,9 @@
         // 開啟女優詳細資訊彈出視窗
         async function openDetailModal(actress) {
             // Increment totalClicks and update in Firestore
+            console.log("✅ 呼叫 openDetailModal，收到女優資料如下：", actress);
+            console.log("🔍 description:", actress.description);
+            console.log("🔍 detailedInfo:", actress.detailedInfo);
             try {
                 const actressDocRef = doc(db, `artifacts/${appId}/public/data/actresses`, actress.id);
                 const updatedClicks = (actress.totalClicks || 0) + 1;
