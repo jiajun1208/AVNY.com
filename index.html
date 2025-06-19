@@ -795,14 +795,14 @@
     <script type="module">
         // Firebase 模組引入
         // 確保這些 CDN 連結是您 Firebase 專案中使用的版本
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, onSnapshot, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
         // ** 重要：Firebase 初始化變數 - 請將這些替換為您自己的 Firebase 專案資訊 **
         // 您可以從 Firebase 控制台的「專案設定」中找到這些資訊
         // 「專案 ID」會是您 Firestore 路徑的一部分，例如在 artifacts/{appId}/... 中
-        const appId = 'YOUR_FIREBASE_PROJECT_ID'; // <-- 請替換為您的 Firebase 專案 ID
+        const appId = 'AVNY.com'; // <-- 請替換為您的 Firebase 專案 ID
 
         // 從 Firebase 控制台 > 專案設定 > 您的應用程式 > Web 應用程式，複製此配置物件
         const firebaseConfig = {
@@ -817,8 +817,6 @@
             // measurementId: "YOUR_MEASUREMENT_ID" // 如果有，也請加上
         };
         // ** 重要：Firebase 初始化變數結束 **
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
 
         let app;
         let db;
