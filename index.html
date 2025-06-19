@@ -2291,10 +2291,10 @@
                 mediaUrl: actressMediaUrlInput.value.trim(), // Will contain YouTube or generic video URL
                 recommendedVideoUrl: actressRecommendedVideoUrlInput.value.trim(), 
                 wikipediaLink: actressWikipediaLinkInput.value.trim(),
-                description: actressDescriptionInput.value, 
-                detailedInfo: actressDetailedInfoInput.value,
+                description: actressDescriptionInput.value, // ✅ 正確！
+                detailedInfo: actressDetailedInfoInput.value, // ✅ 也要這樣寫
                 likes: 0 // New entries start with 0 likes
-            };
+            }
 
             // Validate that at least one name field is provided (ideally zh_TW is primary)
             if (!actressData.name_zh_TW && !actressData.name_zh_CN && !actressData.name_en && !actressData.name_ja) {
