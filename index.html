@@ -2975,7 +2975,17 @@
             // Add event listener for the search button
             searchButton.addEventListener('click', performSearch);
 
-     function getGoogleDriveImageSrc(url) {
+        function getGoogleDriveImageSrc(driveUrl) {
+            const match = driveUrl.match(/\/d\/([^/]+)\//);
+            if (match && match[1]) {
+                const fileId = match[1];
+                return `https://drive.google.com/uc?export=view&id=${fileId}`;
+            } else {
+                console.warn("❗ 無法解析 Google Drive 圖片 ID，請檢查網址格式是否為： https://drive.google.com/file/d/FILE_ID/view");
+                return '';
+            }
+        }
+        function getGoogleDriveImageSrc(url) {
             const match = url.match(/\/d\/([^/]+)\//);
             if (match && match[1]) {
             return `https://drive.google.com/uc?export=view&id=${match[1]}`;
