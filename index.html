@@ -2975,6 +2975,14 @@
             // Add event listener for the search button
             searchButton.addEventListener('click', performSearch);
 
+     function getGoogleDriveImageSrc(url) {
+            const match = url.match(/\/d\/([^/]+)\//);
+            if (match && match[1]) {
+            return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+            }
+            console.warn("❌ 無法從網址中提取圖片 ID，請確認格式是否為 /file/d/.../view");
+            return '';
+    }
             // Update Ad Section 1 with the provided Google Drive image
             const googleDriveAdUrl1 = 'https://drive.google.com/file/d/1Q5piwFkOS6w1iUiGd2I66t4IG2WngJYc/view?usp=sharing';
             adSection1.innerHTML = `<img src="${getGoogleDriveImageSrc(googleDriveAdUrl1)}" alt="順暢寫程式廣告" class="w-full h-auto rounded-lg">`;
