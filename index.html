@@ -2994,8 +2994,9 @@
             return '';
     }
             // Update Ad Section 1 with the provided Google Drive image
-            const googleDriveAdUrl1 = 'https://drive.google.com/uc?export=view&id=1Q5piwFkOS6w1iUiGd2I66t4IG2WngJYc';
-            adSection1.innerHTML = `<img src="${getGoogleDriveImageSrc(googleDriveAdUrl1)}" alt="順暢寫程式廣告" class="w-full h-auto rounded-lg">`;
+            const adSection1 = document.getElementById('adSection1');
+            const googleDriveAdUrl1 = 'https://drive.google.com/file/d/1Q5piwFkOS6w1iUiGd2I66t4IG2WngJYc/view?usp=sharing';
+            adSection1.innerHTML = `<img src="${getGoogleDriveImageSrc(googleDriveAdUrl1)}" alt="廣告圖" class="w-full h-auto rounded-lg">`;
 
             // Update Ad Section 2 with a Google Drive image (placeholder example)
             const googleDriveImagePlaceholderUrl = 'https://drive.google.com/file/d/1Z_D3-JvN4V-B3F7G6H8I9K0L1M2N3O4P/view'; // Placeholder URL, replace with actual
