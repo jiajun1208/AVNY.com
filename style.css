@@ -62,22 +62,15 @@ main, .content-wrapper, .section {
 }
 
 .led-marquee-wrapper {
-  width: 100%;
+  position: relative;
+  height: 2rem;
   overflow: hidden;
-  background-color: black;
-  padding: 10px 0;
-  border-top: 2px solid #ff3c3c;
-  border-bottom: 2px solid #ff3c3c;
 }
 
 .led-marquee {
-  display: inline-block;
+  position: absolute;
+  will-change: transform;
   white-space: nowrap;
-  color: #ff3c3c;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-shadow: 0 0 4px #ff0000, 0 0 8px #ff0000;
   animation: scroll-left 20s linear infinite;
 }
 
