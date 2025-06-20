@@ -1999,6 +1999,10 @@
                     legendAudio.volume = 0.7;
                     legendAudio.play().catch(err => console.warn("傳奇音效播放失敗：", err));
             }
+            modal.classList.remove("legend-background");
+            if (actress.isLegend) {
+                    modal.classList.add("legend-background");
+            }
             
             // Update likes count in modal
             modalLikesCount.textContent = actress.likes || 0;
