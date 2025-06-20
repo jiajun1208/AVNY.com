@@ -1,8 +1,19 @@
+@keyframes blackGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 body {
-  font-family: "Noto Sans TC", sans-serif;
-  background-color: #f3f3f3;
-  margin: 0;
-  padding: 40px;
+  background: linear-gradient(-45deg, #000000, #1a1a1a, #0d0d0d, #1a1a1a);
+  background-size: 400% 400%;
+  animation: blackGradientFlow 15s ease infinite;
 }
 
 .legend-background {
