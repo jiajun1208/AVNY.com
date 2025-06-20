@@ -2290,6 +2290,9 @@
         });
 
         // 渲染後台女優列表
+        document.getElementById('adminPanel').addEventListener('click', () => {
+                document.getElementById('passwordGate').classList.remove('hidden');
+        });
         function renderAdminActressList() {
             adminActressList.innerHTML = '';
             if (allActresses.length === 0) {
@@ -2331,10 +2334,7 @@
             });
         }
 
-        // 新增/編輯女優資料
-           document.getElementById('adminPanel').addEventListener('click', () => {
-                  document.getElementById('passwordGate').classList.remove('hidden');
-           });
+        // 新增/編輯女優資料       
         actressForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             const actressData = {
