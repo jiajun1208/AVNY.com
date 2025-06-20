@@ -1862,14 +1862,18 @@
             const actressCard = document.createElement('div');
             const baseClasses = "rounded-lg shadow-lg p-4 relative overflow-hidden transition transform hover:scale-105";
             const bgColor = actress.isLegend ? 'bg-yellow-400 text-black' : 'bg-gray-800 text-white';
-            actressCard.className = 'actress-card bg-gray-900 p-4 rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 cursor-pointer border border-gray-700 hover:border-red-600 hover:bg-gray-700'; /* 應用新的卡片樣式和邊框顏色，新增hover:bg-gray-700 */
+            actressCard.className = 'actress-card p-4 rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 cursor-pointer border hover:border-red-600 hover:bg-gray-700 relative';
             if (actress.isLegend) {
+                actressCard.classList.add('bg-yellow-400', 'text-black');
+
                 const legendTag = document.createElement('div');
                 legendTag.textContent = 'LEGEND';
                 legendTag.className = 'absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow';
-                card.appendChild(legendTag);
+                actressCard.appendChild(legendTag);
+            } else {
+                actressCard.classList.add('bg-gray-900', 'text-white');
             }
-
+            container.appendChild(actressCard);
             let mediaElementHtml = '';
             // Placeholder video if mediaUrl is missing or invalid
             const defaultYouTubePlaceholder = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ", 1, 1, 1, 0); 
