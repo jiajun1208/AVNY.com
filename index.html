@@ -2005,12 +2005,12 @@
                     const legendAudio = new Audio("https://jiajun1208.github.io/AVNY.com/sounds/1750384961430710209-281936517574735.mp3");
                     legendAudio.volume = 0.7;
                     legendAudio.play().catch(err => console.warn("傳奇音效播放失敗：", err));
-                    actressCard.classList.add('dark-gold-metallic');
             }
-            const modal = document.getElementById("actressDetailModal");
-            modal.classList.remove("legend-background");
+            const modal = document.getElementById('actressDetailModal');
             if (actress.isLegend) {
-                    modal.classList.add("legend-background");
+                  modal.classList.add('dark-gold-metallic');
+            } else {
+                  modal.classList.remove('dark-gold-metallic');
             }
             
             // Update likes count in modal
