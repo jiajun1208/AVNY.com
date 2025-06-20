@@ -630,6 +630,13 @@
     </div>
 
     <!-- 後台管理介面 -->
+   <div id="passwordGate" class="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col items-center justify-center text-white space-y-4">
+          <h2 class="text-2xl font-bold">請輸入管理密碼</h2>
+          <input type="password" id="adminPasswordInput" placeholder="輸入密碼"
+                 class="p-3 rounded text-black w-64 text-lg">
+          <button id="submitPasswordBtn" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">進入</button>
+          <p id="passwordError" class="text-red-400 hidden">❌ 密碼錯誤，請再試一次</p>
+    </div>
     <div id="adminPanel" class="w-full flex-col items-center hidden">
         <main class="w-full max-w-4xl bg-gray-800 p-7 rounded-xl border border-gray-700 mb-10"> <!-- 更改邊框顏色 -->
             <h2 id="addActressHeader" class="text-3xl font-bold text-red-600 mb-6 text-center">新增女優</h2>
@@ -3058,6 +3065,32 @@
 
         // Directly call initializeAppContent on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', initializeAppContent);
+        document.addEventListener('DOMContentLoaded', () => {
+              const correctPassword = 'JASAMI9521';
+    
+              const passwordGate = document.getElementById('passwordGate');
+              const adminPanel = document.getElementById('adminPanel');
+              const passwordInput = document.getElementById('adminPasswordInput');
+              const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+              const passwordError = document.getElementById('passwordError');
+
+              submitPasswordBtn.addEventListener('click', () => {
+                    const entered = passwordInput.value.trim();
+                    if (entered === correctPassword) {
+                          passwordGate.classList.add('hidden');
+                          adminPanel.classList.remove('hidden');
+                    } else {
+                          passwordError.classList.remove('hidden');
+                    }
+              });
+
+      // 按下 Enter 也能送出
+                 passwordInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                              submitPasswordBtn.click();
+                        }
+                 });
+            });
     </script>
 </body>
 </html>
