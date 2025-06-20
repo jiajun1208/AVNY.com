@@ -18,6 +18,32 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+.dark-gold-metallic {
+  background: linear-gradient(135deg, 
+    #3e3b29, /* 深棕灰 */
+    #6b5e31, /* 暗金色 */
+    #8b7a27, /* 金屬亮黃 */
+    #5a5021  /* 深黃綠暗影 */
+  );
+  background-size: 400% 400%;
+  animation: metallicShimmer 10s ease-in-out infinite;
+  color: #e0d8b0; /* 暗金色文字 */
+  box-shadow: 0 0 8px rgba(139, 122, 39, 0.6);
+}
+
+/* 金屬質感光澤閃爍動畫 */
+@keyframes metallicShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .container {
   max-width: 600px;
   margin: auto;
