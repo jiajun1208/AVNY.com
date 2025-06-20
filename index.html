@@ -671,6 +671,11 @@
                     <input type="text" id="actressCupSize" required placeholder="例如: E"
                            class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-text focus:outline-none focus:border-red-600">
                 </div>
+                
+                <div class="flex items-center mt-4">
+                    <input type="checkbox" id="actressIsLegend" class="mr-2">
+                    <label for="actressIsLegend" class="text-white">傳奇人物 (Legend)</label>
+                </div>  
                 <div>
                     <label for="actressDescription" id="descriptionLabelAdmin" class="block text-white text-base font-medium mb-2">簡介</label>
                     <textarea id="actressDescription"
@@ -928,6 +933,7 @@
         const actressCupSizeInput = document.getElementById('actressCupSize');
         const actressDescriptionInput = document.getElementById('actressDescription'); // 新增
         const actressDetailedInfoInput = document.getElementById('actressDetailedInfo'); // 新增
+        const actressIsLegendInput = document.getElementById('actressIsLegend');
         const actressMediaUrlInput = document.getElementById('actressMediaUrl');
         const actressRecommendedVideoUrlInput = document.getElementById('actressRecommendedVideoUrl'); 
         const actressWikipediaLinkInput = document.getElementById('actressWikipediaLink');
@@ -990,6 +996,9 @@
                 nationality: "國籍",
                 allNationalities: "所有國籍",
                 japan: "日本",
+                europe: "歐美",
+                korea: "南韓",
+                china: "中國",
                 ageGroup: "年齡區間",
                 allAges: "所有年齡",
                 cupSize: "罩杯",
@@ -1068,6 +1077,9 @@
                 nationality: "国籍",
                 allNationalities: "所有国籍",
                 japan: "日本",
+                europe: "欧美",
+                korea: "南韩",
+                china: "中国",
                 ageGroup: "年龄区间",
                 allAges: "所有年龄",
                 cupSize: "罩杯",
@@ -1146,6 +1158,9 @@
                 nationality: "Nationality",
                 allNationalities: "All Nationalities",
                 japan: "Japan",
+                europe: "Western",
+                korea: "Korea",
+                china: "China",
                 ageGroup: "Age Group",
                 allAges: "All Ages",
                 cupSize: "Cup Size",
@@ -1224,6 +1239,9 @@
                 nationality: "国籍",
                 allNationalities: "全ての国籍",
                 japan: "日本",
+                europe: "歐米",
+                korea: "韓国",
+                china: "中国",
                 ageGroup: "年齢層",
                 allAges: "全ての年齢",
                 cupSize: "カップサイズ",
@@ -1842,8 +1860,16 @@
             const age = calculateAge(actress.birthDate);
             const actressName = getActressNameByLang(actress, currentLang); // Get localized name
             const actressCard = document.createElement('div');
+            const baseClasses = "rounded-lg shadow-lg p-4 relative overflow-hidden transition transform hover:scale-105";
+            const bgColor = actress.isLegend ? 'bg-yellow-400 text-black' : 'bg-gray-800 text-white';
             actressCard.className = 'actress-card bg-gray-900 p-4 rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 cursor-pointer border border-gray-700 hover:border-red-600 hover:bg-gray-700'; /* 應用新的卡片樣式和邊框顏色，新增hover:bg-gray-700 */
-            
+            if (actress.isLegend) {
+                const legendTag = document.createElement('div');
+                legendTag.textContent = 'LEGEND';
+                legendTag.className = 'absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow';
+                card.appendChild(legendTag);
+            }
+
             let mediaElementHtml = '';
             // Placeholder video if mediaUrl is missing or invalid
             const defaultYouTubePlaceholder = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ", 1, 1, 1, 0); 
@@ -2292,6 +2318,7 @@
                 nationality: actressNationalityInput.value.trim(),
                 birthDate: actressBirthDateInput.value,
                 cupSize: actressCupSizeInput.value.trim().toUpperCase(),
+                isLegend: actressIsLegendInput.checked
                 mediaUrl: actressMediaUrlInput.value.trim(), // Will contain YouTube or generic video URL
                 recommendedVideoUrl: actressRecommendedVideoUrlInput.value.trim(), 
                 wikipediaLink: actressWikipediaLinkInput.value.trim(),
@@ -2357,6 +2384,7 @@
                 actressNationalityInput.value = actress.nationality;
                 actressBirthDateInput.value = actress.birthDate;
                 actressCupSizeInput.value = actress.cupSize;
+                actressIsLegendInput.checked = actress.isLegend || false;
                 actressDescriptionInput.value = actress.description || ''; // 新增
                 actressDetailedInfoInput.value = actress.detailedInfo || ''; // 新增
                 actressMediaUrlInput.value = actress.mediaUrl || ''; // Load media URL
