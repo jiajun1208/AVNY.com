@@ -1986,10 +1986,7 @@
                 console.error("Error updating click count:", error);
                 showMessage(translations[currentLang].dataError, true);
             }
-            if (actress.isLegend) {
-                  actressCard.classList.add('dark-gold-metallic');
-            }
-
+            
             const age = calculateAge(actress.birthDate);
             detailName.textContent = getActressNameByLang(actress, currentLang); // Get localized name for modal title
             detailNationality.textContent = actress.nationality || translations[currentLang].unknown;
@@ -2008,6 +2005,7 @@
                     const legendAudio = new Audio("https://jiajun1208.github.io/AVNY.com/sounds/1750384961430710209-281936517574735.mp3");
                     legendAudio.volume = 0.7;
                     legendAudio.play().catch(err => console.warn("傳奇音效播放失敗：", err));
+                    actressCard.classList.add('dark-gold-metallic');
             }
             const modal = document.getElementById("actressDetailModal");
             modal.classList.remove("legend-background");
