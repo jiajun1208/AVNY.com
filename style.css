@@ -62,22 +62,23 @@ main, .content-wrapper, .section {
 }
 
 .led-marquee-wrapper {
+  width: 100%;
   overflow: hidden;
-  background-color: #000; /* LED 黑底 */
-  border-top: 2px solid #ff0000;
-  border-bottom: 2px solid #ff0000;
-  padding: 8px 0;
+  background-color: black;
+  padding: 10px 0;
+  border-top: 2px solid #ff3c3c;
+  border-bottom: 2px solid #ff3c3c;
 }
 
 .led-marquee {
   display: inline-block;
   white-space: nowrap;
-  color: #ff4444;
-  font-family: 'Courier New', monospace;
+  color: #ff3c3c;
+  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
-  font-size: 1.1rem;
-  text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000;
-  animation: scroll-left 15s linear infinite;
+  font-size: 1.2rem;
+  text-shadow: 0 0 4px #ff0000, 0 0 8px #ff0000;
+  animation: scroll-left 20s linear infinite;
 }
 
 @keyframes scroll-left {
