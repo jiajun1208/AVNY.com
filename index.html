@@ -1993,7 +1993,13 @@
             } else {
                 detailWikipediaLink.classList.remove('pointer-events-none', 'opacity-50');
             }
-
+            
+            if (actress.isLegend) {
+                    const legendAudio = new Audio("https://jiajun1208.github.io/AVNY.com/sounds/1750384961430710209-281936517574735.mp3");
+                    legendAudio.volume = 0.7;
+                    legendAudio.play().catch(err => console.warn("傳奇音效播放失敗：", err));
+            }
+            
             // Update likes count in modal
             modalLikesCount.textContent = actress.likes || 0;
             detailLikeButton.dataset.id = actress.id; // Set the actress ID on the like button
