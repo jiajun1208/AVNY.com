@@ -5,6 +5,19 @@ body {
   padding: 40px;
 }
 
+.legend-background {
+  background: linear-gradient(135deg, #f5e074, #ffd700, #f5e074);
+  background-size: 200% 200%;
+  animation: shimmer 4s linear infinite;
+  box-shadow: 0 0 30px gold;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .container {
   max-width: 600px;
   margin: auto;
