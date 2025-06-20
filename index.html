@@ -82,6 +82,33 @@
             align-items: center;
             z-index: 1001;
         }
+        /* 暗金屬風格背景 */
+        .dark-gold-metallic {
+              background: linear-gradient(
+                135deg,
+                #4b3b0b,
+                #665214,
+                #a1861f,
+                #5a4a12,
+                #382f09
+              );
+              background-size: 400% 400%;
+              animation: metallicShine 8s ease infinite;
+              color: #f1e1a6; /* 文字顏色可調 */
+        }
+
+        /* 漸層閃動動畫 */
+        @keyframes metallicShine {
+              0% {
+                    background-position: 0% 50%;
+              }
+              50% {
+                    background-position: 100% 50%;
+              }
+              100% {
+                    background-position: 0% 50%;
+              }
+        }
         .confirm-modal-content {
             background-color: #1A1A1A;
             padding: 2.5rem; /* 增加內邊距 */
