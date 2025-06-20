@@ -1986,6 +1986,9 @@
                 console.error("Error updating click count:", error);
                 showMessage(translations[currentLang].dataError, true);
             }
+            if (actress.isLegend) {
+                  actressCard.classList.add('dark-gold-metallic');
+            }
 
             const age = calculateAge(actress.birthDate);
             detailName.textContent = getActressNameByLang(actress, currentLang); // Get localized name for modal title
